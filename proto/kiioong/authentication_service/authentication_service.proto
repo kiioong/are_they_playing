@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package authentication_service;
+
+option go_package = "github.com/kiioong/are_they_playing/gen/go/internal/kiioong/authentication_service";
+
+
+service Authentification {
+  rpc Login (AuthenticationData) returns (AuthentificationStatus) {}
+  rpc Logout (AuthenticationData) returns (AuthentificationStatus) {}
+}
+
+message AuthenticationData {
+  string username = 1;
+  string password = 2;
+  int32 session_id = 3;
+}
+
+message AuthentificationStatus {
+  bool is_logged_in = 1;
+}

@@ -4,4 +4,6 @@ tasks:
   generate:
     cmds:
       - buf generate
-        
+  run:
+    cmds:
+      - go run internal/server.go
