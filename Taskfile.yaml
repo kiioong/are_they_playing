@@ -6,4 +6,13 @@ tasks:
       - buf generate
   run:
     cmds:
-      - go run internal/server.go
+      - task: run-backend
+      - task: run-frontend
+  run-backend:
+    cmds:
+      - GOFLAGS="-mod=mod" go build -C backend internal/server.go
+      - ./backend/server
+  run-frontend:
+    dir: frontend
+    cmds:
+      - ionic serve
