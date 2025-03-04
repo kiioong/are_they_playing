@@ -1,0 +1,8 @@
+services:
+  envoy:
+    image: envoyproxy/envoy:v1.33-latest
+    restart: unless-stopped
+    ports:
+      - "10000:10000"
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml
