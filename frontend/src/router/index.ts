@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 import HomePage from '../views/HomePage.vue'
 import Login from "@/views/Login.vue";
+import AsyncLogin from "@/views/AsyncLogin.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -15,8 +16,8 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/login',
-    name: 'Login',
-    component: Login
+    name: 'AsyncLogin',
+    component: AsyncLogin
   }
 ]
 
