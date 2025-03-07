@@ -29,9 +29,9 @@ export interface AuthenticationData {
     sessionId: number;
 }
 /**
- * @generated from protobuf message authentication_service.AuthentificationStatus
+ * @generated from protobuf message authentication_service.AuthenticationStatus
  */
-export interface AuthentificationStatus {
+export interface AuthenticationStatus {
     /**
      * @generated from protobuf field: bool is_logged_in = 1;
      */
@@ -101,20 +101,20 @@ class AuthenticationData$Type extends MessageType<AuthenticationData> {
  */
 export const AuthenticationData = new AuthenticationData$Type();
 // @generated message type with reflection information, may provide speed optimized methods
-class AuthentificationStatus$Type extends MessageType<AuthentificationStatus> {
+class AuthenticationStatus$Type extends MessageType<AuthenticationStatus> {
     constructor() {
-        super("authentication_service.AuthentificationStatus", [
+        super("authentication_service.AuthenticationStatus", [
             { no: 1, name: "is_logged_in", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
         ]);
     }
-    create(value?: PartialMessage<AuthentificationStatus>): AuthentificationStatus {
+    create(value?: PartialMessage<AuthenticationStatus>): AuthenticationStatus {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.isLoggedIn = false;
         if (value !== undefined)
-            reflectionMergePartial<AuthentificationStatus>(this, message, value);
+            reflectionMergePartial<AuthenticationStatus>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: AuthentificationStatus): AuthentificationStatus {
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: AuthenticationStatus): AuthenticationStatus {
         let message = target ?? this.create(), end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
@@ -133,7 +133,7 @@ class AuthentificationStatus$Type extends MessageType<AuthentificationStatus> {
         }
         return message;
     }
-    internalBinaryWrite(message: AuthentificationStatus, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(message: AuthenticationStatus, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
         /* bool is_logged_in = 1; */
         if (message.isLoggedIn !== false)
             writer.tag(1, WireType.Varint).bool(message.isLoggedIn);
@@ -144,13 +144,13 @@ class AuthentificationStatus$Type extends MessageType<AuthentificationStatus> {
     }
 }
 /**
- * @generated MessageType for protobuf message authentication_service.AuthentificationStatus
+ * @generated MessageType for protobuf message authentication_service.AuthenticationStatus
  */
-export const AuthentificationStatus = new AuthentificationStatus$Type();
+export const AuthenticationStatus = new AuthenticationStatus$Type();
 /**
- * @generated ServiceType for protobuf service authentication_service.Authentification
+ * @generated ServiceType for protobuf service authentication_service.Authentication
  */
-export const Authentification = new ServiceType("authentication_service.Authentification", [
-    { name: "Login", options: {}, I: AuthenticationData, O: AuthentificationStatus },
-    { name: "Logout", options: {}, I: AuthenticationData, O: AuthentificationStatus }
+export const Authentication = new ServiceType("authentication_service.Authentication", [
+    { name: "Login", options: {}, I: AuthenticationData, O: AuthenticationStatus },
+    { name: "Logout", options: {}, I: AuthenticationData, O: AuthenticationStatus }
 ]);

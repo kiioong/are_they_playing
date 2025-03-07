@@ -20,7 +20,7 @@ import * as grpcWeb from 'grpc-web';
 import * as kiioong_authentication_service_authentication_service_pb from '../../kiioong/authentication_service/authentication_service_pb'; // proto import: "kiioong/authentication_service/authentication_service.proto"
 
 
-export class AuthentificationClient {
+export class AuthenticationClient {
   client_: grpcWeb.AbstractClientBase;
   hostname_: string;
   credentials_: null | { [index: string]: string; };
@@ -40,35 +40,35 @@ export class AuthentificationClient {
   }
 
   methodDescriptorLogin = new grpcWeb.MethodDescriptor(
-    '/authentication_service.Authentification/Login',
+    '/authentication_service.Authentication/Login',
     grpcWeb.MethodType.UNARY,
     kiioong_authentication_service_authentication_service_pb.AuthenticationData,
-    kiioong_authentication_service_authentication_service_pb.AuthentificationStatus,
+    kiioong_authentication_service_authentication_service_pb.AuthenticationStatus,
     (request: kiioong_authentication_service_authentication_service_pb.AuthenticationData) => {
       return request.serializeBinary();
     },
-    kiioong_authentication_service_authentication_service_pb.AuthentificationStatus.deserializeBinary
+    kiioong_authentication_service_authentication_service_pb.AuthenticationStatus.deserializeBinary
   );
 
   login(
     request: kiioong_authentication_service_authentication_service_pb.AuthenticationData,
-    metadata?: grpcWeb.Metadata | null): Promise<kiioong_authentication_service_authentication_service_pb.AuthentificationStatus>;
+    metadata?: grpcWeb.Metadata | null): Promise<kiioong_authentication_service_authentication_service_pb.AuthenticationStatus>;
 
   login(
     request: kiioong_authentication_service_authentication_service_pb.AuthenticationData,
     metadata: grpcWeb.Metadata | null,
     callback: (err: grpcWeb.RpcError,
-               response: kiioong_authentication_service_authentication_service_pb.AuthentificationStatus) => void): grpcWeb.ClientReadableStream<kiioong_authentication_service_authentication_service_pb.AuthentificationStatus>;
+               response: kiioong_authentication_service_authentication_service_pb.AuthenticationStatus) => void): grpcWeb.ClientReadableStream<kiioong_authentication_service_authentication_service_pb.AuthenticationStatus>;
 
   login(
     request: kiioong_authentication_service_authentication_service_pb.AuthenticationData,
     metadata?: grpcWeb.Metadata | null,
     callback?: (err: grpcWeb.RpcError,
-               response: kiioong_authentication_service_authentication_service_pb.AuthentificationStatus) => void) {
+               response: kiioong_authentication_service_authentication_service_pb.AuthenticationStatus) => void) {
     if (callback !== undefined) {
       return this.client_.rpcCall(
         this.hostname_ +
-          '/authentication_service.Authentification/Login',
+          '/authentication_service.Authentication/Login',
         request,
         metadata || {},
         this.methodDescriptorLogin,
@@ -76,42 +76,42 @@ export class AuthentificationClient {
     }
     return this.client_.unaryCall(
     this.hostname_ +
-      '/authentication_service.Authentification/Login',
+      '/authentication_service.Authentication/Login',
     request,
     metadata || {},
     this.methodDescriptorLogin);
   }
 
   methodDescriptorLogout = new grpcWeb.MethodDescriptor(
-    '/authentication_service.Authentification/Logout',
+    '/authentication_service.Authentication/Logout',
     grpcWeb.MethodType.UNARY,
     kiioong_authentication_service_authentication_service_pb.AuthenticationData,
-    kiioong_authentication_service_authentication_service_pb.AuthentificationStatus,
+    kiioong_authentication_service_authentication_service_pb.AuthenticationStatus,
     (request: kiioong_authentication_service_authentication_service_pb.AuthenticationData) => {
       return request.serializeBinary();
     },
-    kiioong_authentication_service_authentication_service_pb.AuthentificationStatus.deserializeBinary
+    kiioong_authentication_service_authentication_service_pb.AuthenticationStatus.deserializeBinary
   );
 
   logout(
     request: kiioong_authentication_service_authentication_service_pb.AuthenticationData,
-    metadata?: grpcWeb.Metadata | null): Promise<kiioong_authentication_service_authentication_service_pb.AuthentificationStatus>;
+    metadata?: grpcWeb.Metadata | null): Promise<kiioong_authentication_service_authentication_service_pb.AuthenticationStatus>;
 
   logout(
     request: kiioong_authentication_service_authentication_service_pb.AuthenticationData,
     metadata: grpcWeb.Metadata | null,
     callback: (err: grpcWeb.RpcError,
-               response: kiioong_authentication_service_authentication_service_pb.AuthentificationStatus) => void): grpcWeb.ClientReadableStream<kiioong_authentication_service_authentication_service_pb.AuthentificationStatus>;
+               response: kiioong_authentication_service_authentication_service_pb.AuthenticationStatus) => void): grpcWeb.ClientReadableStream<kiioong_authentication_service_authentication_service_pb.AuthenticationStatus>;
 
   logout(
     request: kiioong_authentication_service_authentication_service_pb.AuthenticationData,
     metadata?: grpcWeb.Metadata | null,
     callback?: (err: grpcWeb.RpcError,
-               response: kiioong_authentication_service_authentication_service_pb.AuthentificationStatus) => void) {
+               response: kiioong_authentication_service_authentication_service_pb.AuthenticationStatus) => void) {
     if (callback !== undefined) {
       return this.client_.rpcCall(
         this.hostname_ +
-          '/authentication_service.Authentification/Logout',
+          '/authentication_service.Authentication/Logout',
         request,
         metadata || {},
         this.methodDescriptorLogout,
@@ -119,7 +119,7 @@ export class AuthentificationClient {
     }
     return this.client_.unaryCall(
     this.hostname_ +
-      '/authentication_service.Authentification/Logout',
+      '/authentication_service.Authentication/Logout',
     request,
     metadata || {},
     this.methodDescriptorLogout);

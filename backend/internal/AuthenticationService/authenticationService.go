@@ -2,30 +2,28 @@ package authenticationService
 
 import (
 	"context"
-	"fmt"
 
 	as "github.com/kiioong/are_they_playing/gen/go/kiioong/authentication_service"
 )
 
 type AuthentificationServer struct {
-	as.UnimplementedAuthentificationServer
+	as.UnimplementedAuthenticationServer
 }
 
-func (s *AuthentificationServer) Login(ctx context.Context, in *as.AuthenticationData) (*as.AuthentificationStatus, error) {
-	fmt.Println("Test")
+func (s *AuthentificationServer) Login(ctx context.Context, in *as.AuthenticationData) (*as.AuthenticationStatus, error) {
 	if in.Username == "Admin" {
-		return &as.AuthentificationStatus{
+		return &as.AuthenticationStatus{
 			IsLoggedIn: true,
 		}, nil
 	}
 
-	return &as.AuthentificationStatus{
+	return &as.AuthenticationStatus{
 		IsLoggedIn: false,
 	}, nil
 }
 
-func (s *AuthentificationServer) Logout(ctx context.Context, in *as.AuthenticationData) (*as.AuthentificationStatus, error) {
-	return &as.AuthentificationStatus{
+func (s *AuthentificationServer) Logout(ctx context.Context, in *as.AuthenticationData) (*as.AuthenticationStatus, error) {
+	return &as.AuthenticationStatus{
 		IsLoggedIn: false,
 	}, nil
 }

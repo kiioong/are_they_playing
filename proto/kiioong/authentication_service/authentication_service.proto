@@ -5,9 +5,9 @@ package authentication_service;
 option go_package = "github.com/kiioong/are_they_playing/gen/go/internal/kiioong/authentication_service";
 
 
-service Authentification {
-  rpc Login (AuthenticationData) returns (AuthentificationStatus) {}
-  rpc Logout (AuthenticationData) returns (AuthentificationStatus) {}
+service Authentication {
+  rpc Login (AuthenticationData) returns (AuthenticationStatus) {}
+  rpc Logout (AuthenticationData) returns (AuthenticationStatus) {}
 }
 
 message AuthenticationData {
@@ -16,6 +16,6 @@ message AuthenticationData {
   int32 session_id = 3;
 }
 
-message AuthentificationStatus {
+message AuthenticationStatus {
   bool is_logged_in = 1;
 }

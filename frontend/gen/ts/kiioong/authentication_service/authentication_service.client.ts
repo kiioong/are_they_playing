@@ -3,46 +3,46 @@
 // tslint:disable
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
-import { Authentification } from "./authentication_service";
+import { Authentication } from "./authentication_service";
 import { stackIntercept } from "@protobuf-ts/runtime-rpc";
-import type { AuthentificationStatus } from "./authentication_service";
+import type { AuthenticationStatus } from "./authentication_service";
 import type { AuthenticationData } from "./authentication_service";
 import type { UnaryCall } from "@protobuf-ts/runtime-rpc";
 import type { RpcOptions } from "@protobuf-ts/runtime-rpc";
 /**
- * @generated from protobuf service authentication_service.Authentification
+ * @generated from protobuf service authentication_service.Authentication
  */
-export interface IAuthentificationClient {
+export interface IAuthenticationClient {
     /**
-     * @generated from protobuf rpc: Login(authentication_service.AuthenticationData) returns (authentication_service.AuthentificationStatus);
+     * @generated from protobuf rpc: Login(authentication_service.AuthenticationData) returns (authentication_service.AuthenticationStatus);
      */
-    login(input: AuthenticationData, options?: RpcOptions): UnaryCall<AuthenticationData, AuthentificationStatus>;
+    login(input: AuthenticationData, options?: RpcOptions): UnaryCall<AuthenticationData, AuthenticationStatus>;
     /**
-     * @generated from protobuf rpc: Logout(authentication_service.AuthenticationData) returns (authentication_service.AuthentificationStatus);
+     * @generated from protobuf rpc: Logout(authentication_service.AuthenticationData) returns (authentication_service.AuthenticationStatus);
      */
-    logout(input: AuthenticationData, options?: RpcOptions): UnaryCall<AuthenticationData, AuthentificationStatus>;
+    logout(input: AuthenticationData, options?: RpcOptions): UnaryCall<AuthenticationData, AuthenticationStatus>;
 }
 /**
- * @generated from protobuf service authentication_service.Authentification
+ * @generated from protobuf service authentication_service.Authentication
  */
-export class AuthentificationClient implements IAuthentificationClient, ServiceInfo {
-    typeName = Authentification.typeName;
-    methods = Authentification.methods;
-    options = Authentification.options;
+export class AuthenticationClient implements IAuthenticationClient, ServiceInfo {
+    typeName = Authentication.typeName;
+    methods = Authentication.methods;
+    options = Authentication.options;
     constructor(private readonly _transport: RpcTransport) {
     }
     /**
-     * @generated from protobuf rpc: Login(authentication_service.AuthenticationData) returns (authentication_service.AuthentificationStatus);
+     * @generated from protobuf rpc: Login(authentication_service.AuthenticationData) returns (authentication_service.AuthenticationStatus);
      */
-    login(input: AuthenticationData, options?: RpcOptions): UnaryCall<AuthenticationData, AuthentificationStatus> {
+    login(input: AuthenticationData, options?: RpcOptions): UnaryCall<AuthenticationData, AuthenticationStatus> {
         const method = this.methods[0], opt = this._transport.mergeOptions(options);
-        return stackIntercept<AuthenticationData, AuthentificationStatus>("unary", this._transport, method, opt, input);
+        return stackIntercept<AuthenticationData, AuthenticationStatus>("unary", this._transport, method, opt, input);
     }
     /**
-     * @generated from protobuf rpc: Logout(authentication_service.AuthenticationData) returns (authentication_service.AuthentificationStatus);
+     * @generated from protobuf rpc: Logout(authentication_service.AuthenticationData) returns (authentication_service.AuthenticationStatus);
      */
-    logout(input: AuthenticationData, options?: RpcOptions): UnaryCall<AuthenticationData, AuthentificationStatus> {
+    logout(input: AuthenticationData, options?: RpcOptions): UnaryCall<AuthenticationData, AuthenticationStatus> {
         const method = this.methods[1], opt = this._transport.mergeOptions(options);
-        return stackIntercept<AuthenticationData, AuthentificationStatus>("unary", this._transport, method, opt, input);
+        return stackIntercept<AuthenticationData, AuthenticationStatus>("unary", this._transport, method, opt, input);
     }
 }

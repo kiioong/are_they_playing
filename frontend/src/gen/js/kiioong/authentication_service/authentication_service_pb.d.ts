@@ -28,19 +28,19 @@ export namespace AuthenticationData {
   }
 }
 
-export class AuthentificationStatus extends jspb.Message {
+export class AuthenticationStatus extends jspb.Message {
   getIsLoggedIn(): boolean;
-  setIsLoggedIn(value: boolean): AuthentificationStatus;
+  setIsLoggedIn(value: boolean): AuthenticationStatus;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): AuthentificationStatus.AsObject;
-  static toObject(includeInstance: boolean, msg: AuthentificationStatus): AuthentificationStatus.AsObject;
-  static serializeBinaryToWriter(message: AuthentificationStatus, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): AuthentificationStatus;
-  static deserializeBinaryFromReader(message: AuthentificationStatus, reader: jspb.BinaryReader): AuthentificationStatus;
+  toObject(includeInstance?: boolean): AuthenticationStatus.AsObject;
+  static toObject(includeInstance: boolean, msg: AuthenticationStatus): AuthenticationStatus.AsObject;
+  static serializeBinaryToWriter(message: AuthenticationStatus, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AuthenticationStatus;
+  static deserializeBinaryFromReader(message: AuthenticationStatus, reader: jspb.BinaryReader): AuthenticationStatus;
 }
 
-export namespace AuthentificationStatus {
+export namespace AuthenticationStatus {
   export type AsObject = {
     isLoggedIn: boolean,
   }

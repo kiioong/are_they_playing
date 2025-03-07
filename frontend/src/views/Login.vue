@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar} from '@ionic/vue';
-import {AuthentificationClient} from '@/../gen/ts/kiioong/authentication_service/authentication_service.client'
+import {AuthenticationClient} from '@/../gen/ts/kiioong/authentication_service/authentication_service.client'
 import {GrpcWebFetchTransport} from "@protobuf-ts/grpcweb-transport";
 
 
@@ -35,7 +35,7 @@ const login = async () => {
     baseUrl: "http://localhost:10000",
   });
 
-  const ac = new AuthentificationClient(transport);
+  const ac = new AuthenticationClient(transport);
   const result = await ac.login({username: 'Admin', password: '12345', sessionId: -1})
   console.log(result.response);
 }

@@ -17,7 +17,7 @@ func main() {
 	var opts []grpc.ServerOption
 
 	grpcServer := grpc.NewServer(opts...)
-	as.RegisterAuthentificationServer(grpcServer, authenticationService.NewServer())
+	as.RegisterAuthenticationServer(grpcServer, authenticationService.NewServer())
 
 	grpcServer.Serve(lis)
 }
