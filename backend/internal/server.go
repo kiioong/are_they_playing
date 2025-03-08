@@ -4,7 +4,7 @@ import (
 	"log"
 	"net"
 
-	as "github.com/kiioong/are_they_playing/gen/go/kiioong/authentication_service"
+	auth "github.com/kiioong/are_they_playing/gen/go/kiioong/authentication"
 	authenticationService "github.com/kiioong/are_they_playing/internal/AuthenticationService"
 	"google.golang.org/grpc"
 )
@@ -15,9 +15,10 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	var opts []grpc.ServerOption
+	opts = append(opts, grpc.UnaryInterceptor(authenticationService.UnaryInterceptor))
 
 	grpcServer := grpc.NewServer(opts...)
-	as.RegisterAuthenticationServer(grpcServer, authenticationService.NewServer())
+	auth.RegisterAuthenticationServer(grpcServer, authenticationService.NewServer())
 
 	grpcServer.Serve(lis)
 }

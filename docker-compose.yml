@@ -8,6 +8,8 @@ services:
       - "9090:9090"
     volumes:
       - "./backend:/usr/src/app"
+    environment:
+      SECRET_KEY:
 
   ionic-gui:
     build:

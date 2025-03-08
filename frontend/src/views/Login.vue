@@ -9,11 +9,11 @@
       <form name="login-form" >
         <div class="mb-3">
           <label for="username">Username: </label>
-          <input id="username" type="text" />
+          <input v-model="username" id="username" type="text" />
         </div>
         <div class="mb-3">
           <label for="password">Password: </label>
-          <input id="password" type="password" />
+          <input v-model="password" id="password" type="password" />
         </div>
         <ion-button @click="login">Login</ion-button>
       </form>
@@ -25,20 +25,27 @@
 
 <script setup lang="ts">
 import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar} from '@ionic/vue';
-import {AuthenticationClient} from '@/../gen/ts/kiioong/authentication_service/authentication_service.client'
+import {AuthenticationClient} from '@/../gen/ts/kiioong/authentication/authentication_service.client'
 import {GrpcWebFetchTransport} from "@protobuf-ts/grpcweb-transport";
+import {ref} from "vue";
 
-
+const username = ref('');
+const password = ref('');
 
 const login = async () => {
+  if (!username.value || !password.value) {
+    //validation
+    console.error('Please enter a username and password');
+    return;
+  }
+
   const transport = new GrpcWebFetchTransport({
     baseUrl: "http://localhost:10000",
   });
 
   const ac = new AuthenticationClient(transport);
-  const result = await ac.login({username: 'Admin', password: '12345', sessionId: -1})
+  const result = await ac.login({username: username.value, password: password.value})
   console.log(result.response);
 }
-
 
 </script>

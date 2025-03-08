@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package services;
+
+option go_package = "github.com/kiioong/are_they_playing/gen/go/internal/kiioong/services";
+
+
+service Authentication {
+  rpc Login (LoginData) returns (Session) {}
+  rpc Logout (Session) returns (Session) {}
+}
+
+message LoginData {
+  string username = 1;
+  string password = 2;
+}
+
+message Session {
+  string jwt_token = 1;
+}

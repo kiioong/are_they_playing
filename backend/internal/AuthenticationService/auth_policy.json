@@ -1,0 +1,16 @@
+{
+    "name": "are they playing auth policy",
+    "allow_rules": [
+        {
+            "name": "user_access",
+            "source": {
+				"principals": ["*", ""]
+            },
+            "request": {
+				"paths": [
+					"/app.service/*"
+				]
+            }
+        }
+    ]
+}
