@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package services;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/kiioong/are_they_playing/gen/go/internal/kiioong/services";
+
+service App {
+  rpc GetLeagues (google.protobuf.Empty) returns (stream League);
+  rpc GetTeams (League) returns (stream Team);
+  rpc SelectTeam(Team) returns (MutationResult);
+}
+
+message League {
+  int32 id = 1;
+  string name = 2;
+  repeated Team teams = 3;
+}
+
+message Team {
+  int32 id = 1;
+  string name = 2;
+}
+
+message MutationResult {
+  bool success = 1;
+}
