@@ -16,3 +16,9 @@ tasks:
     dir: frontend
     cmds:
       - ionic serve
+  build-frontend:
+    dir: frontend
+    cmds:
+      - ionic build
+      - ionic cap copy
+      - ionic cap sync
