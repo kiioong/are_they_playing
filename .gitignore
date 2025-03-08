@@ -29,3 +29,5 @@ backend/server
 frontend/gen/*
 
 .idea
+.vscode
+frontend/.vscode
