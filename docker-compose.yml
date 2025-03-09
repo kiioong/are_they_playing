@@ -21,6 +21,15 @@ services:
     volumes:
       - "./frontend:/app"
 
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: are_they_playing
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+    volumes:
+      - database:/var/lib/postgresql/data
 
   envoy:
     image: envoyproxy/envoy:v1.33-latest
@@ -31,3 +40,6 @@ services:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+volumes:
+  database:
