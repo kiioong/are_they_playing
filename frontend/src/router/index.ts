@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import HomePage from '../views/HomePage.vue'
 import {defineAsyncComponent} from "vue";
+import {Preferences} from "@capacitor/preferences";
 
 const Login = defineAsyncComponent(() => import('@/views/Login.vue'));
+const HomePage = () => import('@/views/HomePage.vue');
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -25,6 +26,25 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
+})
+
+const authTokenResult = await Preferences.get({key: 'authToken'});
+
+
+
+const isAuthenticated = authTokenResult.value !== null && authTokenResult.value !== '';
+
+console.log(authTokenResult, isAuthenticated);
+
+router.beforeEach((to) => {
+  if (
+      // make sure the user is authenticated
+      !isAuthenticated &&
+      to.name !== 'Login'
+  ) {
+    // redirect the user to the login page
+    return { name: 'Login' }
+  }
 })
 
 export default router

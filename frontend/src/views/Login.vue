@@ -28,9 +28,14 @@ import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar} from '@ionic/vue';
 import {AuthenticationClient} from '@/../gen/ts/kiioong/authentication/authentication_service.client'
 import {GrpcWebFetchTransport} from "@protobuf-ts/grpcweb-transport";
 import {ref} from "vue";
+import {Preferences} from "@capacitor/preferences";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
 
 const username = ref('');
 const password = ref('');
+
 
 const login = async () => {
   if (!username.value || !password.value) {
@@ -45,7 +50,15 @@ const login = async () => {
 
   const ac = new AuthenticationClient(transport);
   const result = await ac.login({username: username.value, password: password.value})
-  console.log(result.response);
+
+  if (result.response.jwtToken === '') {
+    // validation
+    return;
+  }
+
+  await Preferences.set({key: "authToken", value: result.response.jwtToken});
+
+  await router.push('/home');
 }
 
 </script>

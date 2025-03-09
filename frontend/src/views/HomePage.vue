@@ -3,6 +3,9 @@
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-title>Blank</ion-title>
+        <ion-buttons slot="end">
+          <ion-button @click="logout()">Logout</ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
@@ -23,6 +26,15 @@
 
 <script setup lang="ts">
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import {Preferences} from "@capacitor/preferences";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
+
+const logout = async () => {
+  await Preferences.remove({key: 'authToken'});
+  await router.push('/login');
+}
 </script>
 
 <style scoped>
