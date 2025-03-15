@@ -53,6 +53,7 @@ const login = async () => {
 
   if (result.response.jwtToken === '') {
     // validation
+    console.error('Username not found or wrong password');
     return;
   }
 

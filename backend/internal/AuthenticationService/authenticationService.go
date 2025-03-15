@@ -9,6 +9,8 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	auth "github.com/kiioong/are_they_playing/gen/go/kiioong/authentication"
+	"github.com/kiioong/are_they_playing/internal/Database"
+	hash "github.com/kiioong/are_they_playing/internal/Hash"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
@@ -23,9 +25,19 @@ type AuthentificationServer struct {
 }
 
 func (s *AuthentificationServer) Login(ctx context.Context, in *auth.LoginData) (*auth.Session, error) {
-	if in.Username == "Admin" {
+	var user Database.User
+
+	result := Database.DB.Where("username = ?", strings.ToLower(in.Username)).First(&user)
+
+	if result.Error != nil {
 		return &auth.Session{
-			JwtToken: generateJWT(),
+			JwtToken: "",
+		}, nil
+	}
+
+	if hash.VerifyPassword(in.Password, user.Password) {
+		return &auth.Session{
+			JwtToken: GenerateJWT(),
 		}, nil
 	}
 
@@ -104,7 +116,7 @@ func UnaryInterceptor(
 	return handler(newCtx, req)
 }
 
-func generateJWT() string {
+func GenerateJWT() string {
 	claims := jwt.RegisteredClaims{
 		Subject:   "12345",                                       // User ID
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour)), // 1-hour expiry

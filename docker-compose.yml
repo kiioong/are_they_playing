@@ -10,6 +10,10 @@ services:
       - "./backend:/usr/src/app"
     environment:
       SECRET_KEY:
+      POSTGRES_DB: are_they_playing
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+      ADMIN_PASSWORD:    
 
   ionic-gui:
     build:
@@ -24,6 +28,8 @@ services:
   db:
     image: postgres
     restart: always
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_DB: are_they_playing
       POSTGRES_USER:
@@ -38,8 +44,6 @@ services:
       - "10000:10000"
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
 volumes:
   database:
