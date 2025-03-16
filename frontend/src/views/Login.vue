@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar} from '@ionic/vue';
+import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton} from '@ionic/vue';
 import {AuthenticationClient} from '@/../gen/ts/kiioong/authentication/authentication_service.client'
 import {GrpcWebFetchTransport} from "@protobuf-ts/grpcweb-transport";
 import {ref} from "vue";
