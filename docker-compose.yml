@@ -14,6 +14,7 @@ services:
       POSTGRES_USER:
       POSTGRES_PASSWORD:
       ADMIN_PASSWORD:    
+      INTERNAL_SERVICE_AUTH_KEY:
 
   ionic-gui:
     build:
@@ -44,6 +45,18 @@ services:
       - "10000:10000"
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
+
+  python_service:
+    build: 
+      context: .
+      target: python
+    environment:
+      SCRIPT_NAME:
+      INTERNAL_SERVICE_AUTH_KEY:
+    volumes:
+      - ./microservices:/usr/src/app
+    stdin_open: true
+    tty: true
 
 volumes:
   database:

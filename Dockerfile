@@ -24,3 +24,18 @@ COPY frontend/. .
 EXPOSE 80
 
 CMD ["./node_modules/@ionic/cli/bin/ionic", "serve","--host", "0.0.0.0", "--port", "80"]
+
+FROM python:3.13.2-alpine3.21 AS python
+
+WORKDIR /usr/src/app
+
+COPY microservices/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY /microservices .
+
+COPY microservices/.docker/python/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Set entrypoint
+ENTRYPOINT ["/entrypoint.sh"]

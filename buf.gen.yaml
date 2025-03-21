@@ -9,5 +9,10 @@ plugins:
     opt: paths=source_relative
   - remote: buf.build/community/timostamm-protobuf-ts:v2.9.4
     out: frontend/gen/ts
+  - protoc_builtin: python
+    protoc_path: '/usr/bin/protoc'
+    out: microservices/gen/python
+  - remote: buf.build/grpc/python:v1.71.0
+    out: microservices/gen/python
 inputs:
   - directory: proto

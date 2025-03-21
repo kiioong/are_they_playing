@@ -31,7 +31,7 @@ func InitDatabase(dsn string) {
 }
 
 type User struct {
-	ID        uint      `gorm:"primaryKey"`
+	ID        uint64    `gorm:"primaryKey"`
 	Username  string    `gorm:"type:varchar(255);unique;not null"`
 	Password  string    `gorm:"type:varchar(255);not null"`
 	CreatedAt time.Time `gorm:"autoCreateTime"`

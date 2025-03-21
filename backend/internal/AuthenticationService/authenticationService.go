@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -17,12 +18,15 @@ import (
 
 // Methods that should be excluded from authentication (e.g., Login)
 var excludedMethods = map[string]bool{
-	"/services.Authentication/Login": true, // Exclude Login RPC
+	"/services.Authentication/Login":                       true,
+	"/services.Authentication/AuthenticateInternalService": true,
 }
 
 type AuthentificationServer struct {
 	auth.UnimplementedAuthenticationServer
 }
+
+type User struct{}
 
 func (s *AuthentificationServer) Login(ctx context.Context, in *auth.LoginData) (*auth.Session, error) {
 	var user Database.User
@@ -37,7 +41,7 @@ func (s *AuthentificationServer) Login(ctx context.Context, in *auth.LoginData) 
 
 	if hash.VerifyPassword(in.Password, user.Password) {
 		return &auth.Session{
-			JwtToken: GenerateJWT(),
+			JwtToken: GenerateJWT(user.ID),
 		}, nil
 	}
 
@@ -47,6 +51,18 @@ func (s *AuthentificationServer) Login(ctx context.Context, in *auth.LoginData) 
 }
 
 func (s *AuthentificationServer) Logout(ctx context.Context, in *auth.Session) (*auth.Session, error) {
+	return &auth.Session{
+		JwtToken: "",
+	}, nil
+}
+
+func (s *AuthentificationServer) AuthenticateInternalService(ctx context.Context, in *auth.ServiceAuthToken) (*auth.Session, error) {
+	if in.Token == os.Getenv("INTERNAL_SERVICE_AUTH_KEY") {
+		return &auth.Session{
+			JwtToken: GenerateJWT(in.ServiceId),
+		}, nil
+	}
+
 	return &auth.Session{
 		JwtToken: "",
 	}, nil
@@ -62,19 +78,16 @@ var jwtSecret = []byte(os.Getenv("SECRET_KEY"))
 
 // AuthInterceptor checks JWT token in metadata
 func AuthInterceptor(ctx context.Context) (context.Context, error) {
-	// Extract metadata from context
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return nil, errors.New("missing metadata")
 	}
 
-	// Get authorization header
 	authHeader, exists := md["authorization"]
 	if !exists || len(authHeader) == 0 {
 		return nil, errors.New("missing authorization token")
 	}
 
-	// Extract token (format: "Bearer <token>")
 	tokenString := strings.TrimPrefix(authHeader[0], "Bearer ")
 	if tokenString == authHeader[0] { // No "Bearer " prefix
 		return nil, errors.New("invalid token format")
@@ -90,10 +103,8 @@ func AuthInterceptor(ctx context.Context) (context.Context, error) {
 		return nil, errors.New("invalid or expired token")
 	}
 
-	userId := 1
-
 	// Store claims in context for later use
-	ctx = context.WithValue(ctx, userId, claims.Subject)
+	ctx = context.WithValue(ctx, User{}, claims.Subject)
 	return ctx, nil
 }
 
@@ -106,7 +117,7 @@ func UnaryInterceptor(
 ) (interface{}, error) {
 	// Check if the current method is in the excluded list
 	if _, excluded := excludedMethods[info.FullMethod]; excluded {
-		return handler(ctx, req) // Skip auth, proceed with request
+		return handler(ctx, req)
 	}
 
 	newCtx, err := AuthInterceptor(ctx)
@@ -116,10 +127,10 @@ func UnaryInterceptor(
 	return handler(newCtx, req)
 }
 
-func GenerateJWT() string {
+func GenerateJWT(user_id uint64) string {
 	claims := jwt.RegisteredClaims{
-		Subject:   "12345",                                       // User ID
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour)), // 1-hour expiry
+		Subject:   strconv.FormatUint(user_id, 10),                    // User ID
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)), // 24-hour expiry
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
