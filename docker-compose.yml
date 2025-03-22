@@ -57,6 +57,7 @@ services:
       - ./microservices:/usr/src/app
     stdin_open: true
     tty: true
+    network_mode: host
 
 volumes:
   database:
