@@ -7,8 +7,10 @@ import (
 	"os"
 
 	auth "github.com/kiioong/are_they_playing/gen/go/kiioong/authentication"
+	league_management_proto "github.com/kiioong/are_they_playing/gen/go/kiioong/league_management"
 	authenticationService "github.com/kiioong/are_they_playing/internal/AuthenticationService"
 	"github.com/kiioong/are_they_playing/internal/Database"
+	leaguemanagement "github.com/kiioong/are_they_playing/internal/LeagueManagemant"
 	"google.golang.org/grpc"
 )
 
@@ -26,6 +28,7 @@ func main() {
 
 	grpcServer := grpc.NewServer(opts...)
 	auth.RegisterAuthenticationServer(grpcServer, authenticationService.NewServer())
+	league_management_proto.RegisterLeagueManagementServer(grpcServer, leaguemanagement.NewServer())
 
 	grpcServer.Serve(lis)
 }

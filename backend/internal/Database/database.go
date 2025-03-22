@@ -40,12 +40,12 @@ type User struct {
 }
 
 type League struct {
-	ID      uint   `gorm:"primaryKey"`
+	ID      uint32 `gorm:"primaryKey"`
 	Name    string `gorm:"type:varchar(255);not null"`
 	SportID uint   `gorm:"not null"`
 
 	Sport Sport
-	Teams []Team `gorm:"foreignKey:LeagueID"`
+	Teams []Team `gorm:"many2many:league_teams;"`
 }
 
 type Team struct {
@@ -53,7 +53,7 @@ type Team struct {
 	Name       string `gorm:"type:varchar(255);not null"`
 	PathToLogo string `gorm:"type:varchar(255)"`
 
-	LeagueID uint
+	Leagues []League `gorm:"many2many:league_teams;"`
 }
 
 type Sport struct {
@@ -71,10 +71,23 @@ type UserTeam struct {
 	Team Team `gorm:"foreignKey:TeamID"`
 }
 
+type LeagueTeam struct {
+	LeagueID uint `gorm:"primaryKey"`
+	TeamID   uint `gorm:"primaryKey"`
+
+	User User `gorm:"foreignKey:LeagueID"`
+	Team Team `gorm:"foreignKey:TeamID"`
+}
+
 type Game struct {
-	ID        uint `gorm:"primaryKey"`
-	HomeTeam  Team
-	AwayTeam  Team
+	ID         uint `gorm:"primaryKey"`
+	HomeTeamID uint
+	AwayTeamID uint
+	LeagueID   uint
+
 	StartTime time.Time
-	League    League
+
+	HomeTeam Team   `gorm:"foreignKey:HomeTeamID"`
+	AwayTeam Team   `gorm:"foreignKey:AwayTeamID"`
+	League   League `gorm:"foreignKey:LeagueID"`
 }
