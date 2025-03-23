@@ -9,7 +9,7 @@ option go_package = "github.com/kiioong/are_they_playing/gen/go/internal/kiioong
 service LeagueManagement {
   rpc GetLeagues (google.protobuf.Empty) returns (stream League);
   rpc GetTeams (League) returns (stream Team);
-  rpc AddTeamToFavourites(AddTeamToFavouritesData) returns (MutationResult);
+  rpc AddTeamToFavourites(Team) returns (MutationResult);
   rpc AddTeam(Team) returns (Team);
   rpc DelTeam(Team) returns (MutationResult);
   rpc AddTeamToLeague(TeamLeague) returns (MutationResult);
@@ -20,11 +20,11 @@ service LeagueManagement {
 message League {
   uint32 id = 1;
   string name = 2;
-  repeated Team teams = 3;
+  string sport = 3;
 }
 
 message Team {
-  int32 id = 1;
+  uint32 id = 1;
   string name = 2;
   string path_to_logo = 3;
 }
@@ -37,13 +37,8 @@ message TeamLeague {
 message Game {
   Team home_team = 1;
   Team away_team = 2;
-  uint64 start_timestamp = 3;
+  int64 start_timestamp = 3;
   League league = 4;
-}
-
-message AddTeamToFavouritesData {
-  uint64 user_id = 1;
-  Team team = 2;
 }
 
 message MutationResult {
