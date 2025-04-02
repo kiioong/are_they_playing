@@ -23,8 +23,11 @@
     "@ionic/cli": "^7.2.0",
     "@ionic/vue": "^8.0.0",
     "@ionic/vue-router": "^8.0.0",
+    "@tailwindcss/vite": "^4.0.16",
     "ionicons": "^7.0.0",
+    "prettier": "^3.5.3",
     "vue": "^3.3.0",
+    "vue-i18n": "10",
     "vue-router": "^4.2.0"
   },
   "devDependencies": {

@@ -1,11 +1,18 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
-  
+  {{ $props.homeTeam?.name }} - {{ $props.awayTeam?.name }} -
+  {{ startTime }}
 </template>
 
-<style scoped>
+<script setup lang="ts">
+import { Game } from "../../gen/ts/kiioong/league_management/league_management";
 
-</style>
+const props = defineProps<Game>();
+
+const startDate = new Date(Number(props.startTimestamp) * 1000);
+
+const startTime = startDate.getHours() + ":" + startDate.getMinutes();
+
+console.log(props);
+</script>
+
+<style scoped></style>
