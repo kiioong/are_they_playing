@@ -16,7 +16,6 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-// Methods that should be excluded from authentication (e.g., Login)
 var excludedMethods = map[string]bool{
 	"/services.Authentication/Login":                       true,
 	"/services.Authentication/AuthenticateInternalService": true,
@@ -125,6 +124,50 @@ func UnaryInterceptor(
 		return nil, err
 	}
 	return handler(newCtx, req)
+}
+
+type wrappedStream interface {
+	grpc.ServerStream
+	SetContext(context.Context)
+}
+
+type wrapper struct {
+	grpc.ServerStream
+	ctx context.Context
+}
+
+func (w *wrapper) Context() context.Context {
+	return w.ctx
+}
+
+func (w *wrapper) SetContext(ctx context.Context) {
+	w.ctx = ctx
+}
+
+func newWrappedStream(s grpc.ServerStream) wrappedStream {
+	ctx := s.Context()
+	return &wrapper{s, ctx}
+}
+
+func StreamInterceptor(srv any, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+	if _, excluded := excludedMethods[info.FullMethod]; excluded {
+		return nil
+	}
+
+	wrappedStream := newWrappedStream(
+		ss,
+	)
+
+	newCtx, err := AuthInterceptor(ss.Context())
+
+	wrappedStream.SetContext(newCtx)
+
+	if err != nil {
+		return err
+	}
+
+	// authentication (token verification)
+	return handler(srv, wrappedStream)
 }
 
 func GenerateJWT(user_id uint64) string {

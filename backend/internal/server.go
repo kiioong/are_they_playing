@@ -24,7 +24,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	var opts []grpc.ServerOption
-	opts = append(opts, grpc.UnaryInterceptor(authenticationService.UnaryInterceptor))
+	opts = append(opts, grpc.UnaryInterceptor(authenticationService.UnaryInterceptor), grpc.StreamInterceptor(authenticationService.StreamInterceptor))
 
 	grpcServer := grpc.NewServer(opts...)
 	auth.RegisterAuthenticationServer(grpcServer, authenticationService.NewServer())
