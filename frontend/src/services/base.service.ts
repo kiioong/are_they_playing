@@ -7,7 +7,7 @@ export class BaseService {
     this.grpcClient = GrpcClientService.getInstance();
   }
 
-  protected getTransport() {
-    return this.grpcClient.getTransport();
+  public setToken(token: string) {
+    this.grpcClient.setToken(token);
   }
 }
