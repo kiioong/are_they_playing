@@ -7,7 +7,8 @@ import "google/protobuf/empty.proto";
 option go_package = "github.com/kiioong/are_they_playing/gen/go/internal/kiioong/services";
 
 service LeagueManagement {
-  rpc GetLeagues (google.protobuf.Empty) returns (stream League);
+  rpc GetSports (google.protobuf.Empty) returns (stream Sport);
+  rpc GetLeagues (Sport) returns (stream League);
   rpc GetTeams (League) returns (stream Team);
   rpc AddTeamToFavourites(Team) returns (MutationResult);
   rpc AddTeam(Team) returns (Team);
@@ -15,6 +16,13 @@ service LeagueManagement {
   rpc AddTeamToLeague(TeamLeague) returns (MutationResult);
   rpc AddGame(Game) returns (MutationResult);
   rpc DelGame(Game) returns (MutationResult);
+  rpc GetGames(GameRequest) returns (stream Game);
+}
+
+message Sport {
+  uint64 id = 1;
+  string name = 2;
+  string path_to_logo = 3;
 }
 
 message League {
@@ -43,4 +51,8 @@ message Game {
 
 message MutationResult {
   bool success = 1;
+}
+
+message GameRequest {
+  int64 timestamp_of_day = 1;
 }

@@ -3,6 +3,7 @@ package leaguemanagement
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"time"
 
 	lm "github.com/kiioong/are_they_playing/gen/go/kiioong/league_management"
@@ -120,9 +121,26 @@ func (s *LeagueManagementServer) AddGame(ctx context.Context, in_game *lm.Game) 
 
 }
 
-func (s *LeagueManagementServer) GetLeagues(empty *emptypb.Empty, stream lm.LeagueManagement_GetLeaguesServer) error {
+func (s *LeagueManagementServer) GetSports(empty *emptypb.Empty, stream lm.LeagueManagement_GetSportsServer) error {
+	var sports []Database.Sport
+	result := Database.DB.Find(&sports)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	for _, sport := range sports {
+		if err := stream.Send(&lm.Sport{Id: uint64(sport.ID), Name: sport.Name}); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (s *LeagueManagementServer) GetLeagues(sport *lm.Sport, stream lm.LeagueManagement_GetLeaguesServer) error {
 	var leagues []Database.League
-	result := Database.DB.Find(&leagues)
+	result := Database.DB.Find(&leagues, "sport_id =  ?", sport.Id)
 
 	if result.Error != nil {
 		return result.Error
@@ -139,7 +157,8 @@ func (s *LeagueManagementServer) GetLeagues(empty *emptypb.Empty, stream lm.Leag
 
 func (s *LeagueManagementServer) GetTeams(league *lm.League, stream lm.LeagueManagement_GetTeamsServer) error {
 	var teams []Database.Team
-	result := Database.DB.Find(&teams, "league_id = ?", league.Id)
+
+	result := Database.DB.Joins("JOIN league_teams ON league_teams.team_id = teams.id").Where("league_teams.league_id = ?", league.Id).Find(&teams)
 
 	if result.Error != nil {
 		return result.Error
@@ -157,8 +176,6 @@ func (s *LeagueManagementServer) GetTeams(league *lm.League, stream lm.LeagueMan
 func (s *LeagueManagementServer) AddTeamToFavourites(ctx context.Context, in_team *lm.Team) (*lm.MutationResult, error) {
 	var user Database.User
 	var team Database.Team
-
-	fmt.Println(in_team)
 
 	user_id := ctx.Value(authenticationService.User{})
 
@@ -195,6 +212,81 @@ func (s *LeagueManagementServer) AddTeamToFavourites(ctx context.Context, in_tea
 		Success: true,
 	}, nil
 
+}
+
+func (s *LeagueManagementServer) GetGames(game_request *lm.GameRequest, stream lm.LeagueManagement_GetGamesServer) error {
+	var games []Database.Game
+	var home_team Database.Team
+	var away_team Database.Team
+	var clear_team Database.Team
+	var league Database.League
+
+	ctx := stream.Context()
+
+	user_id, err := strconv.ParseUint(ctx.Value(authenticationService.User{}).(string), 10, 64)
+
+	if err != nil {
+		return err
+	}
+
+	teams, err := getFavouriteTeams(user_id)
+
+	if err != nil {
+		return err
+	}
+
+	var team_ids []uint32
+
+	for _, team := range teams {
+		team_ids = append(team_ids, team.ID)
+	}
+
+	result := Database.DB.Find(&games, "date(start_time) = ? AND (home_team_id in (?) OR games.away_team_id in (?))", time.Unix(game_request.TimestampOfDay, 0).Format("2006-01-02"), team_ids, team_ids)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	for _, game := range games {
+		home_team = clear_team
+		away_team = clear_team
+
+		result = Database.DB.Where("id = ?", game.HomeTeamID).First(&home_team)
+
+		if result.Error != nil {
+			continue
+		}
+
+		result = Database.DB.Where("id = ?", game.AwayTeamID).First(&away_team)
+
+		if result.Error != nil {
+			continue
+		}
+
+		result = Database.DB.Where("id = ?", game.LeagueID).First(&league)
+
+		if result.Error != nil {
+			continue
+		}
+
+		if err := stream.Send(&lm.Game{HomeTeam: &lm.Team{Id: home_team.ID, Name: home_team.Name}, AwayTeam: &lm.Team{Id: away_team.ID, Name: away_team.Name}, StartTimestamp: game.StartTime.Unix(), League: &lm.League{Id: league.ID, Name: league.Name}}); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func getFavouriteTeams(user_id uint64) ([]Database.Team, error) {
+	var teams []Database.Team
+
+	result := Database.DB.Joins("JOIN user_teams ON user_teams.team_id = teams.id").Where("user_teams.user_id = ?", user_id).Find(&teams)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return teams, nil
 }
 
 func NewServer() *LeagueManagementServer {
