@@ -1,6 +1,17 @@
 <template>
-  {{ $props.homeTeam?.name }} - {{ $props.awayTeam?.name }} -
-  {{ startTime }}
+  <ion-grid :fixed="true">
+    <div class="shadow-lg border-0 rounded gameCardWrapper">
+      <ion-row class="ion-justify-content-center">
+        <ion-col class="ion-text-center">
+          {{ $props.homeTeam?.name }}
+        </ion-col>
+        <ion-col class="ion-text-center">{{ $props.awayTeam?.name }}</ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col :size="2" class="ion-text-center">{{ startTime }}</ion-col>
+      </ion-row>
+    </div>
+  </ion-grid>
 </template>
 
 <script setup lang="ts">
@@ -11,8 +22,10 @@ const props = defineProps<Game>();
 const startDate = new Date(Number(props.startTimestamp) * 1000);
 
 const startTime = startDate.getHours() + ":" + startDate.getMinutes();
-
-console.log(props);
 </script>
 
-<style scoped></style>
+<style scoped>
+.gameCardWrapper {
+  background-color: var(--ion-color-primary);
+}
+</style>

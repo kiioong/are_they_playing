@@ -1,2 +1,38 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+
+/*$light-blue: #b0d7d9ff;*/
+/*$eerie-black: #1c2321ff;*/
+/*$paynes-gray: #5e6572ff;*/
+/*$sunglow: #ffc857ff;*/
+/*$burnt-sienna: #e9724cff;*/
+
+:root {
+    /* Set the background of the entire app */
+    --ion-background-color: #E5F1FF;
+    --ion-text-color: #E1E3E0;
+
+    --ion-color-primary: #5171A5;
+    --ion-color-primary-rgb: 81,113,165;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255,255,255;
+    --ion-color-primary-shade: #476391;
+    --ion-color-primary-tint: #627fae;
+}
+
+.ion-color-primary {
+    --ion-color-base: var(--ion-color-primary);
+    --ion-color-base-rgb: var(--ion-color-primary-rgb);
+    --ion-color-contrast: var(--ion-color-primary-contrast);
+    --ion-color-contrast-rgb: var(--ion-color-primary-contrast-rgb);
+    --ion-color-shade: var(--ion-color-primary-shade);
+    --ion-color-tint: var(--ion-color-primary-tint);
+}
+
+ion-toolbar {
+    color: #6C6C6C;
+}
