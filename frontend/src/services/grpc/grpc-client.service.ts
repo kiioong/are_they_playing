@@ -1,6 +1,5 @@
 import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
 import { AuthInterceptor } from "@/services/grpc/auth.interceptor";
-import { Preferences } from "@capacitor/preferences";
 
 export class GrpcClientService {
   private static instance: GrpcClientService;

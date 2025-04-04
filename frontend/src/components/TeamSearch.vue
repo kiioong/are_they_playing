@@ -19,26 +19,31 @@
         :placeholder="$t('TeamSearch.placeholder')"
       ></ion-input>
     </ion-item>
+    <div v-if="leagues.length === 0">
+      <ion-item
+        v-for="sport in sports"
+        :key="sport.id"
+        @click="selectSport(sport)"
+      >
+        <ion-icon
+          class="ion-margin-end"
+          :icon="getIcon(sport.name + 'Outline')"
+        ></ion-icon>
+        {{ $t("sports." + sport.name) }}
+      </ion-item>
+    </div>
 
-    <ion-item
-      v-if="leagues.length === 0"
-      v-for="sport in sports"
-      @click="selectSport(sport)"
-    >
-      <ion-icon
-        class="ion-margin-end"
-        :icon="getIcon(sport.name + 'Outline')"
-      ></ion-icon>
-      {{ $t("sports." + sport.name) }}
-    </ion-item>
-    <ion-item
-      v-if="teams.length === 0"
-      v-for="league in leagues"
-      @click="selectLeague(league)"
-    >
-      {{ league.name }}
-    </ion-item>
-    <ion-item v-for="team in teams" @click="selectTeam(team)">
+    <div v-if="teams.length === 0">
+      <ion-item
+        v-for="league in leagues"
+        :key="league.id"
+        @click="selectLeague(league)"
+      >
+        {{ league.name }}
+      </ion-item>
+    </div>
+
+    <ion-item v-for="team in teams" :key="team.id" @click="selectTeam(team)">
       {{ team.name }}
     </ion-item>
   </ion-content>

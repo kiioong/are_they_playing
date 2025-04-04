@@ -6,8 +6,6 @@ import {
   Sport,
   Team,
 } from "../../gen/ts/kiioong/league_management/league_management";
-import { AuthenticationClient } from "../../gen/ts/kiioong/authentication/authentication_service.client";
-import { Ref } from "vue";
 
 export class LeagueManagementService extends BaseService {
   private leagueManagementClient: LeagueManagementClient;
@@ -21,11 +19,11 @@ export class LeagueManagementService extends BaseService {
   }
 
   public async getSports() {
-    let sports: Sport[] = [];
+    const sports: Sport[] = [];
 
     const sportsStream = this.leagueManagementClient.getSports({});
 
-    for await (let sport of sportsStream.responses) {
+    for await (const sport of sportsStream.responses) {
       sports.push(sport);
     }
 
@@ -33,11 +31,11 @@ export class LeagueManagementService extends BaseService {
   }
 
   public async getLeagues(sport: Sport) {
-    let leagues: League[] = [];
+    const leagues: League[] = [];
 
     const leaguesStream = this.leagueManagementClient.getLeagues(sport);
 
-    for await (let league of leaguesStream.responses) {
+    for await (const league of leaguesStream.responses) {
       leagues.push(league);
     }
 
@@ -45,11 +43,11 @@ export class LeagueManagementService extends BaseService {
   }
 
   public async getTeams(league: League) {
-    let teams: Team[] = [];
+    const teams: Team[] = [];
 
     const teamsStream = this.leagueManagementClient.getTeams(league);
 
-    for await (let team of teamsStream.responses) {
+    for await (const team of teamsStream.responses) {
       teams.push(team);
     }
 
@@ -63,13 +61,13 @@ export class LeagueManagementService extends BaseService {
   }
 
   public async getGames(pickedDay: Date) {
-    let games: Game[] = [];
+    const games: Game[] = [];
 
     const gamesStream = this.leagueManagementClient.getGames({
       timestampOfDay: BigInt((pickedDay.valueOf() / 1000).toFixed(0)),
     });
 
-    for await (let game of gamesStream.responses) {
+    for await (const game of gamesStream.responses) {
       games.push(game);
     }
 

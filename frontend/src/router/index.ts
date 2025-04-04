@@ -4,7 +4,7 @@ import { defineAsyncComponent, inject } from "vue";
 import { Preferences } from "@capacitor/preferences";
 import { SERVICES } from "@/keys";
 
-const Login = defineAsyncComponent(() => import("@/views/Login.vue"));
+const Login = defineAsyncComponent(() => import("@/views/LoginPage.vue"));
 const HomePage = () => import("@/views/HomePage.vue");
 
 const routes: Array<RouteRecordRaw> = [

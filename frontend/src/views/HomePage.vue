@@ -13,6 +13,7 @@
       <DayToggleBar v-model="pickedDay"></DayToggleBar>
       <GameCard
         v-for="game in games"
+        :key="game.homeTeam?.id"
         :start-timestamp="game.startTimestamp"
         :home-team="game.homeTeam"
         :away-team="game.awayTeam"
@@ -22,7 +23,7 @@
           <ion-icon :icon="addOutline"></ion-icon>
         </ion-fab-button>
       </ion-fab>
-      <ion-modal ref="modal" trigger="open-add-team-modal" @willDismiss="">
+      <ion-modal ref="modal" trigger="open-add-team-modal">
         <TeamSearch @close-modal="cancel"></TeamSearch>
       </ion-modal>
     </ion-content>
