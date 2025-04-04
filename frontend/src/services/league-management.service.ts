@@ -7,6 +7,7 @@ import {
   Team,
 } from "../../gen/ts/kiioong/league_management/league_management";
 import { AuthenticationClient } from "../../gen/ts/kiioong/authentication/authentication_service.client";
+import { Ref } from "vue";
 
 export class LeagueManagementService extends BaseService {
   private leagueManagementClient: LeagueManagementClient;
@@ -61,12 +62,11 @@ export class LeagueManagementService extends BaseService {
     return result.response.success;
   }
 
-  public async getGames() {
+  public async getGames(pickedDay: Date) {
     let games: Game[] = [];
 
     const gamesStream = this.leagueManagementClient.getGames({
-      // timestampOfDay: BigInt(Date.now()),
-      timestampOfDay: BigInt(1743934873),
+      timestampOfDay: BigInt((pickedDay.valueOf() / 1000).toFixed(0)),
     });
 
     for await (let game of gamesStream.responses) {

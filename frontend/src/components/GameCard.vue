@@ -15,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+import { IonGrid, IonRow, IonCol } from "@ionic/vue";
 import { Game } from "../../gen/ts/kiioong/league_management/league_management";
 
 const props = defineProps<Game>();

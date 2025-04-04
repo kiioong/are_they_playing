@@ -10,11 +10,7 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
+      <DayToggleBar v-model="pickedDay"></DayToggleBar>
       <GameCard
         v-for="game in games"
         :start-timestamp="game.startTimestamp"
@@ -50,13 +46,11 @@ import {
 import { Preferences } from "@capacitor/preferences";
 import { useRouter } from "vue-router";
 import { addOutline } from "ionicons/icons";
-import { defineAsyncComponent, inject, onMounted, Ref, ref } from "vue";
-import {
-  Game,
-  Sport,
-} from "../../gen/ts/kiioong/league_management/league_management";
+import { defineAsyncComponent, inject, onMounted, Ref, ref, watch } from "vue";
+import { Game } from "../../gen/ts/kiioong/league_management/league_management";
 import { SERVICES } from "@/keys";
 import GameCard from "@/components/GameCard.vue";
+import DayToggleBar from "@/components/DayToggleBar.vue";
 
 const TeamSearch = defineAsyncComponent(
   () => import("@/components/TeamSearch.vue"),
@@ -67,11 +61,17 @@ const leagueManagementService = inject(SERVICES)?.leagueManagementService;
 
 const modal = ref();
 let games: Ref<Game[]> = ref([]);
+const pickedDay = ref(new Date().setHours(0, 0, 0));
 
 const cancel = () => modal.value.$el.dismiss(null, "cancel");
 
 onMounted(async () => {
-  games.value = (await leagueManagementService?.getGames()) ?? [];
+  games.value =
+    (await leagueManagementService?.getGames(pickedDay.value)) ?? [];
+});
+
+watch(pickedDay, async (newDay) => {
+  games.value = (await leagueManagementService?.getGames(newDay)) ?? [];
 });
 
 const logout = async () => {

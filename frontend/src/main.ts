@@ -51,6 +51,9 @@ const i18n = createI18n({
         search: "Search",
         placeholder: "sport/league/team",
       },
+      misc: {
+        today: "Today",
+      },
     },
     de: {
       actions: {
@@ -63,6 +66,9 @@ const i18n = createI18n({
         caption: "Wähle ein Team zum Hinzufügen",
         search: "Suche",
         placeholder: "Sport/Liga/Team",
+      },
+      misc: {
+        today: "Heute",
       },
     },
   },
