@@ -40,5 +40,6 @@ const decreaseDay = () => {
 ion-grid {
   padding: 0;
   background-color: var(--ion-color-secondary);
+  color: #e1e3e0;
 }
 </style>

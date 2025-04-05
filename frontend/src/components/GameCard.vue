@@ -28,5 +28,6 @@ const startTime = startDate.getHours() + ":" + startDate.getMinutes();
 <style scoped>
 .gameCardWrapper {
   background-color: var(--ion-color-primary);
+  color: #e1e3e0;
 }
 </style>

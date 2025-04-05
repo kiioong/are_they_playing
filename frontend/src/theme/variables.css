@@ -14,7 +14,7 @@ http://ionicframework.com/docs/theming/ */
 :root {
     /* Set the background of the entire app */
     --ion-background-color: #E5F1FF;
-    --ion-text-color: #E1E3E0;
+    --ion-text-color: #6C6C6C;
 
     --ion-color-primary: #5171A5;
     --ion-color-primary-rgb: 81,113,165;
@@ -31,8 +31,4 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-contrast-rgb: var(--ion-color-primary-contrast-rgb);
     --ion-color-shade: var(--ion-color-primary-shade);
     --ion-color-tint: var(--ion-color-primary-tint);
-}
-
-ion-toolbar {
-    color: #6C6C6C;
 }
