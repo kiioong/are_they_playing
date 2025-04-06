@@ -54,6 +54,10 @@ const i18n = createI18n({
       HomePage: {
         noGamesMessage: "No Games found for this day!",
       },
+      LoginPage: {
+        username: "Username",
+        password: "Password",
+      },
       TeamSearch: {
         caption: "Choose a team to add",
         search: "Search",
@@ -80,6 +84,10 @@ const i18n = createI18n({
       },
       HomePage: {
         noGamesMessage: "Keine Spiele für diesen Tag gefunden!",
+      },
+      LoginPage: {
+        username: "Benutzername",
+        password: "Passwort",
       },
       TeamSearch: {
         caption: "Wähle ein Team zum Hinzufügen",

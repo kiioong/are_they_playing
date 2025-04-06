@@ -9,17 +9,26 @@
       <ion-grid :fixed="true">
         <ion-row class="ion-justify-content-center">
           <ion-col size="3">
-            <form name="login-form">
-              <div class="mb-3">
-                <label for="username">Username: </label>
-                <input v-model="username" id="username" type="text" />
-              </div>
-              <div class="mb-3">
-                <label for="password">Password: </label>
-                <input v-model="password" id="password" type="password" />
-              </div>
-              <ion-button @click="login">Login</ion-button>
-            </form>
+            <ion-list>
+              <ion-input
+                v-model="username"
+                :label="t('LoginPage.username')"
+                label-placement="stacked"
+                @keydown.enter="login"
+              ></ion-input>
+              <ion-input
+                v-model="password"
+                :label="t('LoginPage.password')"
+                label-placement="stacked"
+                type="password"
+                @keydown.enter="login"
+              >
+                <ion-input-password-toggle
+                  slot="end"
+                ></ion-input-password-toggle
+              ></ion-input>
+              <ion-button buttonType="submit" @click="login">Login</ion-button>
+            </ion-list>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -38,11 +47,16 @@ import {
   IonGrid,
   IonCol,
   IonRow,
+  IonInput,
+  IonInputPasswordToggle,
+  IonList,
 } from "@ionic/vue";
 import { inject, ref } from "vue";
 import { useRouter } from "vue-router";
 import { SERVICES } from "@/keys";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const router = useRouter();
 
 const username = ref("");
@@ -57,7 +71,7 @@ const login = async () => {
     return;
   }
 
-  const loginSuccessful = await authService.login(
+  const loginSuccessful = await authService?.login(
     username.value,
     password.value,
   );
