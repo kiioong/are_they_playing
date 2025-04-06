@@ -3,13 +3,29 @@
     <DefaultHeader></DefaultHeader>
     <ion-content id="main-content" :fullscreen="true">
       <DayToggleBar v-model="pickedDay"></DayToggleBar>
-      <GameCard
-        v-for="game in games"
-        :key="game.homeTeam?.id"
-        :start-timestamp="game.startTimestamp"
-        :home-team="game.homeTeam"
-        :away-team="game.awayTeam"
-      ></GameCard>
+      <ion-grid :fixed="true">
+        <ion-row>
+          <ion-col>
+            <template v-if="games.length > 0">
+              <GameCard
+                v-for="game in games"
+                :key="game.homeTeam?.id"
+                :start-timestamp="game.startTimestamp"
+                :home-team="game.homeTeam"
+                :away-team="game.awayTeam"
+              ></GameCard>
+            </template>
+            <template v-else>
+              <ion-card
+                ><ion-card-content class="text-center">{{
+                  $t("HomePage.noGamesMessage")
+                }}</ion-card-content></ion-card
+              >
+            </template>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
       <ion-fab slot="fixed">
         <ion-fab-button id="open-add-team-modal">
           <ion-icon :icon="addOutline"></ion-icon>
@@ -25,16 +41,16 @@
 <script setup lang="ts">
 import {
   IonContent,
-  IonHeader,
   IonPage,
-  IonTitle,
-  IonToolbar,
   IonIcon,
   IonModal,
   IonFab,
   IonFabButton,
-  IonButton,
-  IonButtons,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonCard,
+  IonCardContent,
 } from "@ionic/vue";
 import { Preferences } from "@capacitor/preferences";
 import { useRouter } from "vue-router";
