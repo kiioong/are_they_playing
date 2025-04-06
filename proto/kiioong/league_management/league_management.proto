@@ -11,9 +11,11 @@ service LeagueManagement {
   rpc GetLeagues (Sport) returns (stream League);
   rpc GetTeams (League) returns (stream Team);
   rpc AddTeamToFavourites(Team) returns (MutationResult);
+  rpc RemoveTeamFromFavourites(Team) returns (MutationResult);
   rpc AddTeam(Team) returns (Team);
   rpc DelTeam(Team) returns (MutationResult);
   rpc AddTeamToLeague(TeamLeague) returns (MutationResult);
+  rpc GetFavouriteTeams(google.protobuf.Empty) returns (stream Team);
   rpc AddGame(Game) returns (MutationResult);
   rpc DelGame(Game) returns (MutationResult);
   rpc GetGames(GameRequest) returns (stream Game);

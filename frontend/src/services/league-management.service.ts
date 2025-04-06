@@ -60,6 +60,25 @@ export class LeagueManagementService extends BaseService {
     return result.response.success;
   }
 
+  public async removeTeamFromFavorites(team: Team) {
+    const result =
+      await this.leagueManagementClient.removeTeamFromFavourites(team);
+
+    return result.response.success;
+  }
+
+  public async getFavouriteTeams() {
+    const teams: Team[] = [];
+
+    const teamsStream = this.leagueManagementClient.getFavouriteTeams({});
+
+    for await (const team of teamsStream.responses) {
+      teams.push(team);
+    }
+
+    return teams;
+  }
+
   public async getGames(pickedDay: Date) {
     const games: Game[] = [];
 

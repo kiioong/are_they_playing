@@ -1,15 +1,7 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Are they Playing?</ion-title>
-        <ion-buttons slot="end">
-          <ion-button @click="logout()">Logout</ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content :fullscreen="true">
+    <DefaultHeader></DefaultHeader>
+    <ion-content id="main-content" :fullscreen="true">
       <DayToggleBar v-model="pickedDay"></DayToggleBar>
       <GameCard
         v-for="game in games"
@@ -52,17 +44,17 @@ import { Game } from "../../gen/ts/kiioong/league_management/league_management";
 import { SERVICES } from "@/keys";
 import GameCard from "@/components/GameCard.vue";
 import DayToggleBar from "@/components/DayToggleBar.vue";
+import DefaultHeader from "@/components/DefaultHeader.vue";
 
 const TeamSearch = defineAsyncComponent(
   () => import("@/components/TeamSearch.vue"),
 );
 
-const router = useRouter();
 const leagueManagementService = inject(SERVICES)?.leagueManagementService;
 
 const modal = ref();
 let games: Ref<Game[]> = ref([]);
-const pickedDay = ref(new Date().setHours(0, 0, 0));
+const pickedDay: Ref<Date> = ref(new Date());
 
 const cancel = () => modal.value.$el.dismiss(null, "cancel");
 
@@ -74,11 +66,6 @@ onMounted(async () => {
 watch(pickedDay, async (newDay) => {
   games.value = (await leagueManagementService?.getGames(newDay)) ?? [];
 });
-
-const logout = async () => {
-  await Preferences.remove({ key: "authToken" });
-  await router.push("/login");
-};
 </script>
 
 <style scoped>

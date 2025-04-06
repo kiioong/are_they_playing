@@ -36,12 +36,17 @@ import "@ionic/vue/css/display.css";
 import "./theme/variables.css";
 
 const i18n = createI18n({
+  legacy: false,
   locale: "de",
   fallbackLocale: "en",
   messages: {
     en: {
       actions: {
         cancel: "CANCEL",
+      },
+      menu: {
+        title: "Menu",
+        teamSettings: "Team Settings",
       },
       sports: {
         football: "Football",
@@ -51,6 +56,10 @@ const i18n = createI18n({
         search: "Search",
         placeholder: "sport/league/team",
       },
+      TeamSettings: {
+        deleteTitle: "Remove Team",
+        deleteMessage: "Are you sure you want to remove this team?",
+      },
       misc: {
         today: "Today",
       },
@@ -59,6 +68,10 @@ const i18n = createI18n({
       actions: {
         cancel: "ABBRECHEN",
       },
+      menu: {
+        title: "Menü",
+        teamSettings: "Team Einstellungen",
+      },
       sports: {
         football: "Fussball",
       },
@@ -66,6 +79,10 @@ const i18n = createI18n({
         caption: "Wähle ein Team zum Hinzufügen",
         search: "Suche",
         placeholder: "Sport/Liga/Team",
+      },
+      TeamSettings: {
+        deleteTitle: "Team Entfernen",
+        deleteMessage: "Möchtest du dieses Team wirklich entfernen?",
       },
       misc: {
         today: "Heute",

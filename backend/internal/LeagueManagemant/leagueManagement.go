@@ -214,6 +214,27 @@ func (s *LeagueManagementServer) AddTeamToFavourites(ctx context.Context, in_tea
 
 }
 
+func (s *LeagueManagementServer) RemoveTeamFromFavourites(ctx context.Context, in_team *lm.Team) (*lm.MutationResult, error) {
+	var user_team Database.UserTeam
+
+	user_id := ctx.Value(authenticationService.User{})
+
+	result := Database.DB.Where("user_id = ? AND team_id = ?", user_id, in_team.Id).First(&user_team)
+
+	if result.Error != nil {
+		return &lm.MutationResult{
+			Success: false,
+		}, result.Error
+	}
+
+	Database.DB.Delete(user_team)
+
+	return &lm.MutationResult{
+		Success: true,
+	}, nil
+
+}
+
 func (s *LeagueManagementServer) GetGames(game_request *lm.GameRequest, stream lm.LeagueManagement_GetGamesServer) error {
 	var games []Database.Game
 	var home_team Database.Team
@@ -270,6 +291,30 @@ func (s *LeagueManagementServer) GetGames(game_request *lm.GameRequest, stream l
 		}
 
 		if err := stream.Send(&lm.Game{HomeTeam: &lm.Team{Id: home_team.ID, Name: home_team.Name}, AwayTeam: &lm.Team{Id: away_team.ID, Name: away_team.Name}, StartTimestamp: game.StartTime.Unix(), League: &lm.League{Id: league.ID, Name: league.Name}}); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (s *LeagueManagementServer) GetFavouriteTeams(empty *emptypb.Empty, stream lm.LeagueManagement_GetTeamsServer) error {
+	ctx := stream.Context()
+
+	user_id, err := strconv.ParseUint(ctx.Value(authenticationService.User{}).(string), 10, 64)
+
+	if err != nil {
+		return err
+	}
+
+	teams, err := getFavouriteTeams(user_id)
+
+	if err != nil {
+		return err
+	}
+
+	for _, team := range teams {
+		if err := stream.Send(&lm.Team{Id: team.ID, Name: team.Name}); err != nil {
 			return err
 		}
 	}

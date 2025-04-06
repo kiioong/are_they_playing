@@ -4,8 +4,9 @@ import { defineAsyncComponent, inject } from "vue";
 import { Preferences } from "@capacitor/preferences";
 import { SERVICES } from "@/keys";
 
-const Login = defineAsyncComponent(() => import("@/views/LoginPage.vue"));
+const LoginPage = defineAsyncComponent(() => import("@/views/LoginPage.vue"));
 const HomePage = () => import("@/views/HomePage.vue");
+const TeamSettingsPage = () => import("@/views/TeamSettingsPage.vue");
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -20,7 +21,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/login",
     name: "Login",
-    component: Login,
+    component: LoginPage,
+  },
+  {
+    path: "/teamSettings",
+    name: "TeamSettings",
+    component: TeamSettingsPage,
   },
 ];
 
@@ -33,8 +39,6 @@ const authTokenResult = await Preferences.get({ key: "authToken" });
 
 const isAuthenticated =
   authTokenResult.value !== null && authTokenResult.value !== "";
-
-console.log(authTokenResult, isAuthenticated);
 
 router.beforeEach((to) => {
   const authService = inject(SERVICES)?.authService;
