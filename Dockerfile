@@ -32,7 +32,7 @@ WORKDIR /usr/src/app
 COPY microservices/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY /microservices .
+COPY microservices/ ./
 
 COPY microservices/.docker/python/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
