@@ -4,7 +4,7 @@ import { defineAsyncComponent, inject } from "vue";
 import { Preferences } from "@capacitor/preferences";
 import { SERVICES } from "@/keys";
 
-const LoginPage = defineAsyncComponent(() => import("@/views/LoginPage.vue"));
+const LoginPage = () => import("@/views/LoginPage.vue");
 const HomePage = () => import("@/views/HomePage.vue");
 const TeamSettingsPage = () => import("@/views/TeamSettingsPage.vue");
 

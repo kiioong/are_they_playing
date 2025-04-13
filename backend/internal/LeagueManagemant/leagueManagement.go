@@ -80,6 +80,7 @@ func (s *LeagueManagementServer) AddGame(ctx context.Context, in_game *lm.Game) 
 	var homeTeam Database.Team
 	var awayTeam Database.Team
 	var league Database.League
+	var game Database.Game
 
 	result := Database.DB.Where("id = ?", in_game.League.Id).First(&league)
 
@@ -105,9 +106,18 @@ func (s *LeagueManagementServer) AddGame(ctx context.Context, in_game *lm.Game) 
 		}, nil
 	}
 
-	game := Database.Game{HomeTeamID: uint(homeTeam.ID), AwayTeamID: uint(awayTeam.ID), StartTime: time.Unix(int64(in_game.StartTimestamp), 0), LeagueID: uint(league.ID)}
+	result = Database.DB.Where("home_team_id = ? AND away_team_id = ?", homeTeam.ID, awayTeam.ID).First(&game)
 
-	result = Database.DB.Create(&game)
+	fmt.Println(game)
+
+	if result.Error == gorm.ErrRecordNotFound {
+		game = Database.Game{HomeTeamID: uint(homeTeam.ID), AwayTeamID: uint(awayTeam.ID), StartTime: time.Unix(int64(in_game.StartTimestamp), 0), LeagueID: uint(league.ID)}
+		result = Database.DB.Create(&game)
+	} else {
+		fmt.Println(game)
+		game.StartTime = time.Unix(int64(in_game.StartTimestamp), 0)
+		Database.DB.Save(&game)
+	}
 
 	if result.Error == nil {
 		return &lm.MutationResult{
@@ -241,6 +251,7 @@ func (s *LeagueManagementServer) GetGames(game_request *lm.GameRequest, stream l
 	var away_team Database.Team
 	var clear_team Database.Team
 	var league Database.League
+	var clear_league Database.League
 
 	ctx := stream.Context()
 
@@ -271,6 +282,7 @@ func (s *LeagueManagementServer) GetGames(game_request *lm.GameRequest, stream l
 	for _, game := range games {
 		home_team = clear_team
 		away_team = clear_team
+		league = clear_league
 
 		result = Database.DB.Where("id = ?", game.HomeTeamID).First(&home_team)
 
