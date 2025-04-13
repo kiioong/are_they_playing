@@ -28,7 +28,7 @@ services:
 
   db:
     image: postgres
-    restart: always
+    restart: unless-stopped
     ports:
       - "5432:5432"
     environment:
@@ -50,11 +50,12 @@ services:
     build: 
       context: .
       target: python
+    restart: unless-stopped
     environment:
       SCRIPT_NAME:
       INTERNAL_SERVICE_AUTH_KEY:
     volumes:
-      - ./microservices:/usr/src/app
+      - ./data_grabber:/usr/src/app
     stdin_open: true
     tty: true
     network_mode: host
