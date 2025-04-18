@@ -11,8 +11,8 @@ plugins:
     out: frontend/gen/ts
   - protoc_builtin: python
     protoc_path: '/usr/bin/protoc'
-    out: microservices/gen/python
+    out: data_grabber/gen/python
   - remote: buf.build/grpc/python:v1.71.0
-    out: microservices/gen/python
+    out: data_grabber/gen/python
 inputs:
   - directory: proto
