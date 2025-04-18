@@ -1,3 +1,6 @@
 [submodule "microservices"]
 	path = microservices
 	url = git@github.com:kiioong/atp_microservices.git
+[submodule "data_grabber"]
+	path = data_grabber
+	url = git@github.com:kiioong/data_grabber.git
