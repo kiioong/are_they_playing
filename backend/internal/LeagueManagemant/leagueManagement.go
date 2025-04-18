@@ -20,10 +20,16 @@ type LeagueManagementServer struct {
 func (s *LeagueManagementServer) AddTeam(ctx context.Context, in *lm.Team) (*lm.Team, error) {
 	var team Database.Team
 
-	result := Database.DB.Where("name = ?", in.Name).First(&team)
+	if in.Gender == "" {
+		in.Gender = "male"
+	}
+
+	fmt.Println(in.Gender)
+
+	result := Database.DB.Where("name = ? AND gender = ?", in.Name, in.Gender).First(&team)
 
 	if result.Error == gorm.ErrRecordNotFound {
-		team = Database.Team{Name: in.Name}
+		team = Database.Team{Name: in.Name, Gender: in.Gender}
 
 		result := Database.DB.Create(&team)
 
@@ -31,17 +37,18 @@ func (s *LeagueManagementServer) AddTeam(ctx context.Context, in *lm.Team) (*lm.
 			return &lm.Team{
 				Id:         team.ID,
 				Name:       team.Name,
+				Gender:     team.Gender,
 				PathToLogo: team.PathToLogo,
 			}, nil
 		}
 
-		fmt.Println(result.Error)
-		return nil, nil
+		return nil, result.Error
 	}
 
 	return &lm.Team{
 		Id:         team.ID,
 		Name:       team.Name,
+		Gender:     team.Gender,
 		PathToLogo: team.PathToLogo,
 	}, nil
 }
@@ -53,7 +60,6 @@ func (s *LeagueManagementServer) AddTeamToLeague(ctx context.Context, in *lm.Tea
 	result := Database.DB.Where("id = ?", in.Team.Id).First(&team)
 
 	if result.Error != nil {
-		fmt.Println(result.Error)
 		return &lm.MutationResult{
 			Success: false,
 		}, nil
@@ -62,7 +68,6 @@ func (s *LeagueManagementServer) AddTeamToLeague(ctx context.Context, in *lm.Tea
 	result = Database.DB.Where("id = ?", in.League.Id).First(&league)
 
 	if result.Error != nil {
-		fmt.Println(result.Error)
 		return &lm.MutationResult{
 			Success: false,
 		}, nil
@@ -108,13 +113,10 @@ func (s *LeagueManagementServer) AddGame(ctx context.Context, in_game *lm.Game) 
 
 	result = Database.DB.Where("home_team_id = ? AND away_team_id = ?", homeTeam.ID, awayTeam.ID).First(&game)
 
-	fmt.Println(game)
-
 	if result.Error == gorm.ErrRecordNotFound {
 		game = Database.Game{HomeTeamID: uint(homeTeam.ID), AwayTeamID: uint(awayTeam.ID), StartTime: time.Unix(int64(in_game.StartTimestamp), 0), LeagueID: uint(league.ID)}
 		result = Database.DB.Create(&game)
 	} else {
-		fmt.Println(game)
 		game.StartTime = time.Unix(int64(in_game.StartTimestamp), 0)
 		Database.DB.Save(&game)
 	}

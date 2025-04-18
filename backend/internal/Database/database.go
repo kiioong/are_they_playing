@@ -50,7 +50,8 @@ type League struct {
 
 type Team struct {
 	ID         uint32 `gorm:"primaryKey"`
-	Name       string `gorm:"type:varchar(255);not null"`
+	Name       string `gorm:"type:varchar(255);not null,index:idx_team,unique"`
+	Gender     string `gorm:"type:varchar(6);not null,index:idx_team,unique"`
 	PathToLogo string `gorm:"type:varchar(255)"`
 
 	Leagues []League `gorm:"many2many:league_teams;"`

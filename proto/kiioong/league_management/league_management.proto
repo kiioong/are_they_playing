@@ -37,6 +37,7 @@ message Team {
   uint32 id = 1;
   string name = 2;
   string path_to_logo = 3;
+  string gender = 4;
 }
 
 message TeamLeague {
