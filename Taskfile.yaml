@@ -22,3 +22,6 @@ tasks:
       - ionic build
       - ionic cap copy
       - ionic cap sync
+  lint:
+    cmds:
+      - docker compose exec python_service pylint .
