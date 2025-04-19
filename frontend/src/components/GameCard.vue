@@ -6,12 +6,14 @@
           <ion-card-header>
             <ion-card-title class="flex flex-row justify-between">
               <span>{{ $props.league?.name }}</span>
-              <span>{{ $t("sports." + $props.league?.sport.name) }}</span>
+              <span><ion-icon
+          :icon="sportIcon"
+        ></ion-icon></span>
             </ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <div class="grid grid-cols-2 grid-rows-2">
-              <div class="p-4">
+            <div class="grid grid-cols-3 grid-rows-2">
+              <div class="p-4 col-span-2">
                 <div class="text-xs md:text-sm">{{ $t("GameCard.home") }}</div>
                 <div class="md:text-lg">{{ $props.homeTeam?.name }}</div>
               </div>
@@ -22,7 +24,7 @@
                   }}</span>
                 </div>
               </div>
-              <div class="p-4">
+              <div class="p-4 col-span-2">
                 <div class="text-xs md:text-sm">{{ $t("GameCard.away") }}</div>
                 <div class="md:text-lg">{{ $props.awayTeam?.name }}</div>
               </div>
@@ -35,15 +37,28 @@
 </template>
 
 <script setup lang="ts">
-import { IonGrid, IonRow, IonCol, IonCard, IonCardContent } from "@ionic/vue";
+import { IonGrid, IonRow, IonCol, IonCard, IonCardContent, IonIcon, IonCardTitle, IonCardHeader } from "@ionic/vue";
 import { Game } from "../../gen/ts/kiioong/league_management/league_management";
 import { format } from "date-fns";
+import { inject, onMounted, ref } from "vue";
+import { SERVICES } from "@/keys";
 
 const props = defineProps<Game>();
 
 const startDate = new Date(Number(props.startTimestamp) * 1000);
 
 const startTime = format(startDate, "HH:mm");
+
+const iconService = inject(SERVICES)?.iconService;
+
+const sportIcon = ref<any>(null);
+
+onMounted(async () => {
+  sportIcon.value = await iconService?.loadIcon(props.league?.sport?.name + "Outline");
+});
+
+
+
 </script>
 
 <style scoped>

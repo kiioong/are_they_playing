@@ -50,6 +50,7 @@ const i18n = createI18n({
       },
       sports: {
         football: "Football",
+        basketball: "Basketball",
       },
       GameCard: {
         home: "Home",
@@ -85,6 +86,7 @@ const i18n = createI18n({
       },
       sports: {
         football: "Fussball",
+        basketball: "Basketball",
       },
       GameCard: {
         home: "Heim",

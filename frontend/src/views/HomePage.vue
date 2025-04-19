@@ -55,18 +55,19 @@ import {
   IonCard,
   IonCardContent,
 } from "@ionic/vue";
-import { Preferences } from "@capacitor/preferences";
-import { useRouter } from "vue-router";
 import { addOutline } from "ionicons/icons";
 import { defineAsyncComponent, inject, onMounted, Ref, ref, watch } from "vue";
 import { Game } from "../../gen/ts/kiioong/league_management/league_management";
 import { SERVICES } from "@/keys";
-import GameCard from "@/components/GameCard.vue";
 import DayToggleBar from "@/components/DayToggleBar.vue";
 import DefaultHeader from "@/components/DefaultHeader.vue";
 
 const TeamSearch = defineAsyncComponent(
   () => import("@/components/TeamSearch.vue"),
+);
+
+const GameCard = defineAsyncComponent(
+  () => import("@/components/GameCard.vue"),
 );
 
 const leagueManagementService = inject(SERVICES)?.leagueManagementService;
