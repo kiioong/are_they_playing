@@ -30,7 +30,7 @@ message Sport {
 message League {
   uint32 id = 1;
   string name = 2;
-  string sport = 3;
+  Sport sport = 3;
 }
 
 message Team {

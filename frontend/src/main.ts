@@ -51,6 +51,10 @@ const i18n = createI18n({
       sports: {
         football: "Football",
       },
+      GameCard: {
+        home: "Home",
+        away: "Away",
+      },
       HomePage: {
         noGamesMessage: "No Games found for this day!",
       },
@@ -81,6 +85,10 @@ const i18n = createI18n({
       },
       sports: {
         football: "Fussball",
+      },
+      GameCard: {
+        home: "Heim",
+        away: "Auswärts",
       },
       HomePage: {
         noGamesMessage: "Keine Spiele für diesen Tag gefunden!",

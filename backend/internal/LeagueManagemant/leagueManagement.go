@@ -2,7 +2,6 @@ package leaguemanagement
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 	"time"
 
@@ -23,8 +22,6 @@ func (s *LeagueManagementServer) AddTeam(ctx context.Context, in *lm.Team) (*lm.
 	if in.Gender == "" {
 		in.Gender = "male"
 	}
-
-	fmt.Println(in.Gender)
 
 	result := Database.DB.Where("name = ? AND gender = ?", in.Name, in.Gender).First(&team)
 
@@ -254,6 +251,8 @@ func (s *LeagueManagementServer) GetGames(game_request *lm.GameRequest, stream l
 	var clear_team Database.Team
 	var league Database.League
 	var clear_league Database.League
+	var sport Database.Sport
+	var clear_sport Database.Sport
 
 	ctx := stream.Context()
 
@@ -285,6 +284,7 @@ func (s *LeagueManagementServer) GetGames(game_request *lm.GameRequest, stream l
 		home_team = clear_team
 		away_team = clear_team
 		league = clear_league
+		sport = clear_sport
 
 		result = Database.DB.Where("id = ?", game.HomeTeamID).First(&home_team)
 
@@ -304,7 +304,14 @@ func (s *LeagueManagementServer) GetGames(game_request *lm.GameRequest, stream l
 			continue
 		}
 
-		if err := stream.Send(&lm.Game{HomeTeam: &lm.Team{Id: home_team.ID, Name: home_team.Name}, AwayTeam: &lm.Team{Id: away_team.ID, Name: away_team.Name}, StartTimestamp: game.StartTime.Unix(), League: &lm.League{Id: league.ID, Name: league.Name}}); err != nil {
+		result = Database.DB.Where("id = ?", league.SportID).First(&sport)
+
+		if result.Error != nil {
+			continue
+		}
+
+		if err := stream.Send(&lm.Game{HomeTeam: &lm.Team{Id: home_team.ID, Name: home_team.Name}, AwayTeam: &lm.Team{Id: away_team.ID, Name: away_team.Name}, StartTimestamp: game.StartTime.Unix(),
+			League: &lm.League{Id: league.ID, Name: league.Name, Sport: &lm.Sport{Id: uint64(sport.ID), Name: sport.Name}}}); err != nil {
 			return err
 		}
 	}

@@ -7,13 +7,16 @@
         <ion-row>
           <ion-col>
             <template v-if="games.length > 0">
-              <GameCard
-                v-for="game in games"
-                :key="game.homeTeam?.id"
-                :start-timestamp="game.startTimestamp"
-                :home-team="game.homeTeam"
-                :away-team="game.awayTeam"
-              ></GameCard>
+              <div class="grid grid-cols-1 lg:grid-cols-2">
+                <GameCard
+                  v-for="game in games"
+                  :key="game.homeTeam?.id"
+                  :start-timestamp="game.startTimestamp"
+                  :home-team="game.homeTeam"
+                  :away-team="game.awayTeam"
+                  :league="game.league"
+                ></GameCard>
+              </div>
             </template>
             <template v-else>
               <ion-card

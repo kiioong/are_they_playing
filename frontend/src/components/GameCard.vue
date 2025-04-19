@@ -3,22 +3,30 @@
     <ion-row
       ><ion-col>
         <ion-card>
+          <ion-card-header>
+            <ion-card-title class="flex flex-row justify-between">
+              <span>{{ $props.league?.name }}</span>
+              <span>{{ $t("sports." + $props.league?.sport.name) }}</span>
+            </ion-card-title>
+          </ion-card-header>
           <ion-card-content>
-            <ion-grid>
-              <ion-row class="ion-justify-content-center">
-                <ion-col class="ion-text-center">
-                  {{ $props.homeTeam?.name }}
-                </ion-col>
-                <ion-col class="ion-text-center">{{
-                  $props.awayTeam?.name
-                }}</ion-col>
-              </ion-row>
-              <ion-row class="ion-justify-content-center">
-                <ion-col :size="2" class="ion-text-center">{{
-                  startTime
-                }}</ion-col>
-              </ion-row>
-            </ion-grid>
+            <div class="grid grid-cols-2 grid-rows-2">
+              <div class="p-4">
+                <div class="text-xs md:text-sm">{{ $t("GameCard.home") }}</div>
+                <div class="md:text-lg">{{ $props.homeTeam?.name }}</div>
+              </div>
+              <div class="row-span-2 flex items-center justify-end">
+                <div class="h-1/2 w-1/2 content-center text-center md:text-md">
+                  <span class="timeBadge p-2 border-2 rounded-full">{{
+                    startTime
+                  }}</span>
+                </div>
+              </div>
+              <div class="p-4">
+                <div class="text-xs md:text-sm">{{ $t("GameCard.away") }}</div>
+                <div class="md:text-lg">{{ $props.awayTeam?.name }}</div>
+              </div>
+            </div>
           </ion-card-content>
         </ion-card>
       </ion-col></ion-row
@@ -29,17 +37,33 @@
 <script setup lang="ts">
 import { IonGrid, IonRow, IonCol, IonCard, IonCardContent } from "@ionic/vue";
 import { Game } from "../../gen/ts/kiioong/league_management/league_management";
+import { format } from "date-fns";
 
 const props = defineProps<Game>();
 
 const startDate = new Date(Number(props.startTimestamp) * 1000);
 
-const startTime = startDate.getHours() + ":" + startDate.getMinutes();
+const startTime = format(startDate, "HH:mm");
 </script>
 
 <style scoped>
 ion-card {
-  background-color: var(--ion-color-primary);
-  color: #e1e3e0;
+  background-color: var(--ion-background-color);
+}
+
+ion-card-header {
+  --tw-gradient-from: var(--ion-color-primary);
+  --tw-gradient-to: var(--ion-color-secondary);
+  --tw-gradient-stops:
+    var(--tw-gradient-from), var(--tw-gradient-to, rgba(221, 214, 254, 0));
+  background-image: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
+ion-card-title {
+  color: #fff;
+}
+
+.timeBadge {
+  color: var(--ion-color-secondary);
 }
 </style>
