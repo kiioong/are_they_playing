@@ -6,32 +6,45 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-grid :fixed="true">
-        <ion-row class="ion-justify-content-center">
-          <ion-col size="3">
-            <ion-list>
-              <ion-input
-                v-model="username"
-                :label="t('LoginPage.username')"
-                label-placement="stacked"
-                @keydown.enter="login"
-              ></ion-input>
-              <ion-input
-                v-model="password"
-                :label="t('LoginPage.password')"
-                label-placement="stacked"
-                type="password"
-                @keydown.enter="login"
-              >
-                <ion-input-password-toggle
-                  slot="end"
-                ></ion-input-password-toggle
-              ></ion-input>
-              <ion-button buttonType="submit" @click="login">Login</ion-button>
-            </ion-list>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+      <div class="flex h-[70vh] items-center justify-center">
+        <ion-grid :fixed="true">
+          <ion-row class="ion-justify-content-center">
+            <ion-col class="!max-w-[330px]" size="10" size-md="6" size-lg="3">
+              <ion-card>
+                <ion-card-content>
+                  <ion-list>
+                    <ion-input
+                      v-model="username"
+                      :label="t('LoginPage.username')"
+                      label-placement="stacked"
+                      @keydown.enter="login"
+                    ></ion-input>
+                    <ion-input
+                      v-model="password"
+                      :label="t('LoginPage.password')"
+                      label-placement="stacked"
+                      type="password"
+                      @keydown.enter="login"
+                    >
+                      <ion-input-password-toggle
+                        slot="end"
+                      ></ion-input-password-toggle
+                    ></ion-input>
+
+                    <ion-button
+                      class="w-full rounded-full pr-[2px]"
+                      size="small"
+                      color="primary"
+                      @click="login"
+                      >Login</ion-button
+                    >
+                  </ion-list>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
     </ion-content>
   </IonPage>
 </template>
@@ -50,6 +63,8 @@ import {
   IonInput,
   IonInputPasswordToggle,
   IonList,
+  IonCard,
+  IonCardContent,
 } from "@ionic/vue";
 import { inject, ref } from "vue";
 import { useRouter } from "vue-router";
@@ -82,6 +97,16 @@ const login = async () => {
     return;
   }
 
-  await router.push("/home");
+  await router
+    .push({ path: "/home" })
+    .then(() => {
+      console.log("Navigation successful");
+    })
+    .catch((error) => {
+      console.error("Error navigating to home:", error);
+    });
+  // router.go(0);
+
+  console.log("Login successful");
 };
 </script>
