@@ -6,16 +6,16 @@
           <ion-title>{{ $t("menu.title") }}</ion-title>
         </ion-toolbar>
       </ion-header>
-      <ion-content class="ion-padding">
-        <div class="cursor-pointer mb-2" @click="() => router.push('/')">
-          Home
-        </div>
-        <div
-          class="cursor-pointer mb-2"
-          @click="() => router.push('/teamSettings')"
+      <ion-content>
+        <ion-item
+          :button="true"
+          class="cursor-pointer"
+          @click="() => router.push('/')"
+          >Home</ion-item
         >
-          {{ $t("menu.teamSettings") }}
-        </div>
+        <ion-item :button="true" @click="() => router.push('/teamSettings')">{{
+          $t("menu.teamSettings")
+        }}</ion-item>
       </ion-content>
     </ion-menu>
     <ion-router-outlet id="main-content" />
