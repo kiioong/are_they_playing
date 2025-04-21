@@ -3,6 +3,7 @@ package authenticationService
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -13,7 +14,21 @@ import (
 	"github.com/kiioong/are_they_playing/internal/Database"
 	hash "github.com/kiioong/are_they_playing/internal/Hash"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
+)
+
+// Custom error types for better error handling
+var (
+	ErrMissingMetadata   = status.Error(codes.InvalidArgument, "missing metadata")
+	ErrMissingToken      = status.Error(codes.Unauthenticated, "missing authorization token")
+	ErrInvalidToken      = status.Error(codes.Unauthenticated, "invalid token format")
+	ErrTokenExpired      = status.Error(codes.Unauthenticated, "token has expired")
+	ErrInvalidSignature  = status.Error(codes.Unauthenticated, "invalid token signature")
+	ErrUserNotFound      = status.Error(codes.NotFound, "user not found")
+	ErrInvalidPassword   = status.Error(codes.Unauthenticated, "invalid password")
+	ErrInvalidServiceKey = status.Error(codes.PermissionDenied, "invalid service authentication key")
 )
 
 var excludedMethods = map[string]bool{
@@ -33,19 +48,18 @@ func (s *AuthentificationServer) Login(ctx context.Context, in *auth.LoginData) 
 	result := Database.DB.Where("username = ?", strings.ToLower(in.Username)).First(&user)
 
 	if result.Error != nil {
-		return &auth.Session{
-			JwtToken: "",
-		}, nil
+		if errors.Is(result.Error, Database.DB.Error) {
+			return nil, ErrUserNotFound
+		}
+		return nil, status.Error(codes.Internal, fmt.Sprintf("database error: %v", result.Error))
 	}
 
-	if hash.VerifyPassword(in.Password, user.Password) {
-		return &auth.Session{
-			JwtToken: GenerateJWT(user.ID),
-		}, nil
+	if !hash.VerifyPassword(in.Password, user.Password) {
+		return nil, ErrInvalidPassword
 	}
 
 	return &auth.Session{
-		JwtToken: "",
+		JwtToken: GenerateJWT(user.ID),
 	}, nil
 }
 
@@ -56,14 +70,27 @@ func (s *AuthentificationServer) Logout(ctx context.Context, in *auth.Session) (
 }
 
 func (s *AuthentificationServer) AuthenticateInternalService(ctx context.Context, in *auth.ServiceAuthToken) (*auth.Session, error) {
-	if in.Token == os.Getenv("INTERNAL_SERVICE_AUTH_KEY") {
-		return &auth.Session{
-			JwtToken: GenerateJWT(in.ServiceId),
-		}, nil
+	if in.Token != os.Getenv("INTERNAL_SERVICE_AUTH_KEY") {
+		return nil, ErrInvalidServiceKey
 	}
 
 	return &auth.Session{
-		JwtToken: "",
+		JwtToken: GenerateJWT(in.ServiceId),
+	}, nil
+}
+
+func (s *AuthentificationServer) ValidateToken(ctx context.Context, in *auth.Session) (*auth.Session, error) {
+	claims, err := validateToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if claims == nil {
+		return nil, ErrInvalidToken
+	}
+
+	return &auth.Session{
+		JwtToken: in.JwtToken,
 	}, nil
 }
 
@@ -77,29 +104,9 @@ var jwtSecret = []byte(os.Getenv("SECRET_KEY"))
 
 // AuthInterceptor checks JWT token in metadata
 func AuthInterceptor(ctx context.Context) (context.Context, error) {
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, errors.New("missing metadata")
-	}
-
-	authHeader, exists := md["authorization"]
-	if !exists || len(authHeader) == 0 {
-		return nil, errors.New("missing authorization token")
-	}
-
-	tokenString := strings.TrimPrefix(authHeader[0], "Bearer ")
-	if tokenString == authHeader[0] { // No "Bearer " prefix
-		return nil, errors.New("invalid token format")
-	}
-
-	// Validate token
-	claims := &jwt.RegisteredClaims{}
-	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		return jwtSecret, nil
-	})
-
-	if err != nil || !token.Valid {
-		return nil, errors.New("invalid or expired token")
+	claims, err := validateToken(ctx)
+	if err != nil {
+		return nil, err
 	}
 
 	// Store claims in context for later use
@@ -168,6 +175,45 @@ func StreamInterceptor(srv any, ss grpc.ServerStream, info *grpc.StreamServerInf
 
 	// authentication (token verification)
 	return handler(srv, wrappedStream)
+}
+
+func validateToken(ctx context.Context) (*jwt.RegisteredClaims, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, ErrMissingMetadata
+	}
+
+	authHeader, exists := md["authorization"]
+	if !exists || len(authHeader) == 0 {
+		return nil, ErrMissingToken
+	}
+
+	tokenString := strings.TrimPrefix(authHeader[0], "Bearer ")
+	if tokenString == authHeader[0] { // No "Bearer " prefix
+		return nil, ErrInvalidToken
+	}
+
+	// Validate token
+	claims := &jwt.RegisteredClaims{}
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return jwtSecret, nil
+	})
+
+	if err != nil {
+		if errors.Is(err, jwt.ErrTokenExpired) {
+			return nil, ErrTokenExpired
+		}
+		if errors.Is(err, jwt.ErrSignatureInvalid) {
+			return nil, ErrInvalidSignature
+		}
+		return nil, status.Error(codes.Unauthenticated, fmt.Sprintf("token validation failed: %v", err))
+	}
+
+	if !token.Valid {
+		return nil, ErrInvalidToken
+	}
+
+	return claims, nil
 }
 
 func GenerateJWT(user_id uint64) string {
