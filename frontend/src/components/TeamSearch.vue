@@ -24,6 +24,7 @@
         v-for="sport in sports"
         :key="sport.id"
         @click="selectSport(sport)"
+        :button="true"
       >
         <ion-icon class="ion-margin-end" :icon="sport.icon"></ion-icon>
         {{ $t("sports." + sport.name) }}
@@ -35,12 +36,13 @@
         v-for="league in leagues"
         :key="league.id"
         @click="selectLeague(league)"
+        :button="true"
       >
         {{ league.name }}
       </ion-item>
     </div>
 
-    <ion-item v-for="team in teams" :key="team.id" @click="selectTeam(team)">
+    <ion-item v-for="team in teams" :key="team.id" @click="selectTeam(team)" :button="true">
       {{ team.name }}
     </ion-item>
   </ion-content>
