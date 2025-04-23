@@ -56,7 +56,8 @@ router.beforeEach(async (to, from, next) => {
     to.name !== "Login"
   ) {
     // redirect the user to the login page
-    return { name: "Login" };
+    next("/login");
+    return;
   }
   next();
 });
