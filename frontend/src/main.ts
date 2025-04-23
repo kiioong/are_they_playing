@@ -62,6 +62,7 @@ const i18n = createI18n({
       LoginPage: {
         username: "Username",
         password: "Password",
+        signup: "Sign up",
       },
       TeamSearch: {
         caption: "Choose a team to add",
@@ -98,6 +99,7 @@ const i18n = createI18n({
       LoginPage: {
         username: "Benutzername",
         password: "Passwort",
+        signup: "Registrieren",
       },
       TeamSearch: {
         caption: "Wähle ein Team zum Hinzufügen",

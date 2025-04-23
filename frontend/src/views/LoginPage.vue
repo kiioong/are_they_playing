@@ -38,6 +38,12 @@
                       @click="login"
                       >Login</ion-button
                     >
+                    <ion-button
+                      class="w-full rounded-full pr-[2px]"
+                      size="small"
+                      color="secondary"
+                      >{{ $t("LoginPage.signup") }}</ion-button
+                    >
                   </ion-list>
                 </ion-card-content>
               </ion-card>
