@@ -66,7 +66,7 @@ import {
 import { inject, onMounted, Ref, ref } from "vue";
 import { SERVICES } from "@/keys";
 
-const emit = defineEmits(["closeModal"]);
+const emit = defineEmits(["closeModal", "teamSelected"]);
 
 const leagueManagementService = inject(SERVICES)?.leagueManagementService;
 
@@ -99,7 +99,7 @@ const selectTeam = async (team: Team) => {
     (await leagueManagementService?.addTeamToFavorites(team)) ?? [];
 
   if (successful) {
-    emit("closeModal");
+    emit("teamSelected",);
   }
 };
 
