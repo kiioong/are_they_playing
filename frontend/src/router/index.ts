@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "@ionic/vue-router";
 import { RouteRecordRaw } from "vue-router";
-import { defineAsyncComponent, inject } from "vue";
+import { inject } from "vue";
 import { Preferences } from "@capacitor/preferences";
 import { SERVICES } from "@/keys";
 
@@ -37,21 +37,30 @@ const router = createRouter({
 
 const authTokenResult = await Preferences.get({ key: "authToken" });
 
-const isAuthenticated =
-  authTokenResult.value !== null && authTokenResult.value !== "";
+const isAuthenticated = async () => {
+  if (!authTokenResult.value) return false;
 
-router.beforeEach((to) => {
+  const authService = inject(SERVICES)?.authService;
+  if (!authService) return false;
+
+  return await authService.validateToken(authTokenResult.value);
+};
+
+router.beforeEach(async (to, from, next) => {
   const authService = inject(SERVICES)?.authService;
   authService?.setToken(authTokenResult.value ?? "");
 
   if (
     // make sure the user is authenticated
-    !isAuthenticated &&
+    !(await isAuthenticated()) &&
     to.name !== "Login"
   ) {
     // redirect the user to the login page
-    return { name: "Login" };
+    next("/login");
+    return;
   }
+
+  next();
 });
 
 export default router;

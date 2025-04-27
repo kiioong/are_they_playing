@@ -62,6 +62,7 @@ const i18n = createI18n({
       LoginPage: {
         username: "Username",
         password: "Password",
+        signup: "Sign up",
       },
       TeamSearch: {
         caption: "Choose a team to add",
@@ -71,6 +72,7 @@ const i18n = createI18n({
       TeamSettings: {
         deleteTitle: "Remove Team",
         deleteMessage: "Are you sure you want to remove this team?",
+        noTeamsMessage: "You aren't following any teams!",
       },
       misc: {
         today: "Today",
@@ -98,6 +100,7 @@ const i18n = createI18n({
       LoginPage: {
         username: "Benutzername",
         password: "Passwort",
+        signup: "Registrieren",
       },
       TeamSearch: {
         caption: "Wähle ein Team zum Hinzufügen",
@@ -107,6 +110,7 @@ const i18n = createI18n({
       TeamSettings: {
         deleteTitle: "Team Entfernen",
         deleteMessage: "Möchtest du dieses Team wirklich entfernen?",
+        noTeamsMessage: "Du folgst keinem Team!",
       },
       misc: {
         today: "Heute",

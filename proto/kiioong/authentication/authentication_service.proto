@@ -9,6 +9,7 @@ service Authentication {
   rpc Login (LoginData) returns (Session) {}
   rpc AuthenticateInternalService (ServiceAuthToken) returns (Session) {}
   rpc Logout (Session) returns (Session) {}
+  rpc ValidateToken (Session) returns (Session) {}
 }
 
 message LoginData {

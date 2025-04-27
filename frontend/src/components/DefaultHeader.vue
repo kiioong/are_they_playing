@@ -6,7 +6,7 @@
       </ion-buttons>
       <ion-title>Are they Playing?</ion-title>
       <ion-buttons slot="end">
-        <ion-button @click="logout()">Logout</ion-button>
+        <ion-button @click="authService?.logout()">Logout</ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -21,15 +21,11 @@ import {
   IonToolbar,
   IonMenuButton,
 } from "@ionic/vue";
-import { Preferences } from "@capacitor/preferences";
 import { useRouter } from "vue-router";
+import { inject } from "vue";
+import { SERVICES } from "@/keys";
 
-const router = useRouter();
-
-const logout = async () => {
-  await Preferences.remove({ key: "authToken" });
-  await router.push("/login");
-};
+const authService = inject(SERVICES)?.authService;
 </script>
 
 <style scoped></style>
