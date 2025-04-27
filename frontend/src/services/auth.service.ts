@@ -42,14 +42,15 @@ export class AuthService extends BaseService {
     if (!token) return false;
 
     try {
-      const validationClient = this.grpcClient.createClient<AuthenticationClient>(
-        AuthenticationClient,
-      );
-      
+      const validationClient =
+        this.grpcClient.createClient<AuthenticationClient>(
+          AuthenticationClient,
+        );
+
       await validationClient.validateToken({
         jwtToken: token,
       });
-      
+
       return true;
     } catch (error) {
       if (error instanceof RpcError && error.code === "UNAUTHENTICATED") {
@@ -64,6 +65,7 @@ export class AuthService extends BaseService {
   public async logout(): Promise<void> {
     try {
       await Preferences.remove({ key: "authToken" });
+      this.setToken("");
       await router.push("/login");
     } catch (error) {
       await this.handleGrpcError(error);
