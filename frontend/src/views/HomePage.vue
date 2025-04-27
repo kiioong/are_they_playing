@@ -35,7 +35,10 @@
         </ion-fab-button>
       </ion-fab>
       <ion-modal ref="modal" trigger="open-add-team-modal">
-        <TeamSearch @close-modal="cancel" @team-selected="teamSelected"></TeamSearch>
+        <TeamSearch
+          @close-modal="cancel"
+          @team-selected="teamSelected"
+        ></TeamSearch>
       </ion-modal>
     </ion-content>
   </ion-page>
@@ -80,6 +83,10 @@ const cancel = () => modal.value.$el.dismiss(null, "cancel");
 
 onMounted(async () => {
   await getGames(pickedDay.value);
+  const teams = await leagueManagementService?.getFavouriteTeams();
+  if (teams?.length === 0) {
+    modal.value.$el.present();
+  }
 });
 
 watch(pickedDay, async (newDay) => {
