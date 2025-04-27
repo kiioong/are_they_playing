@@ -4,23 +4,33 @@
 
     <ion-content>
       <ion-grid :fixed="true">
-        <ion-row v-for="team in teams"
-          ><ion-col>
-            <ion-item>
-              <ion-label>{{ team.name }} </ion-label>
-              <ion-button
-                slot="end"
-                shape="round"
-                color="danger"
-                size="default"
-                @click="() => removeTeamFromFavourites(team)"
-              >
-                <ion-icon slot="icon-only" :icon="trashOutline"></ion-icon
-              ></ion-button>
-            </ion-item> </ion-col
-        ></ion-row>
-      </ion-grid> </ion-content
-  ></ion-page>
+        <template v-if="teams.length > 0">
+          <ion-row v-for="team in teams"
+            ><ion-col>
+              <ion-item>
+                <ion-label>{{ team.name }} </ion-label>
+                <ion-button
+                  slot="end"
+                  shape="round"
+                  color="danger"
+                  size="default"
+                  @click="() => removeTeamFromFavourites(team)"
+                >
+                  <ion-icon slot="icon-only" :icon="trashOutline"></ion-icon
+                ></ion-button>
+              </ion-item> </ion-col
+          ></ion-row>
+        </template>
+        <template v-else>
+          <ion-card
+            ><ion-card-content class="text-center">{{
+              $t("TeamSettings.noTeamsMessage")
+            }}</ion-card-content></ion-card
+          >
+        </template>
+      </ion-grid>
+    </ion-content></ion-page
+  >
 </template>
 
 <script setup lang="ts">
@@ -35,6 +45,8 @@ import {
   IonButton,
   IonLabel,
   modalController,
+  IonCard,
+  IonCardContent,
 } from "@ionic/vue";
 import { trashOutline } from "ionicons/icons";
 import DefaultHeader from "@/components/DefaultHeader.vue";
