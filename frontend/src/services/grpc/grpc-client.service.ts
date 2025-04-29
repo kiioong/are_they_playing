@@ -27,7 +27,7 @@ export class GrpcClientService {
 
   public createTransport(): GrpcWebFetchTransport {
     return new GrpcWebFetchTransport({
-      baseUrl: "http://localhost:10000",
+      baseUrl: "http://192.168.178.20:10000",
       interceptors: [this.authInterceptor],
     });
   }
