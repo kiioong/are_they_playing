@@ -97,22 +97,10 @@ const login = async () => {
     password.value,
   );
 
-  console.log(loginSuccessful);
-
   if (!loginSuccessful) {
     return;
   }
 
-  await router
-    .push({ path: "/home" })
-    .then(() => {
-      console.log("Navigation successful");
-    })
-    .catch((error) => {
-      console.error("Error navigating to home:", error);
-    });
-  // router.go(0);
-
-  console.log("Login successful");
+  await router.push({ path: "/home" });
 };
 </script>

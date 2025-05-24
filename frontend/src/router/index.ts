@@ -3,6 +3,7 @@ import { RouteRecordRaw } from "vue-router";
 import { inject } from "vue";
 import { Preferences } from "@capacitor/preferences";
 import { SERVICES } from "@/keys";
+import { AuthService } from "@/services/auth.service";
 
 const LoginPage = () => import("@/views/LoginPage.vue");
 const HomePage = () => import("@/views/HomePage.vue");
@@ -35,12 +36,12 @@ const router = createRouter({
   routes,
 });
 
-const authTokenResult = await Preferences.get({ key: "authToken" });
-
 const isAuthenticated = async () => {
+  const authTokenResult = await Preferences.get({ key: "authToken" });
   if (!authTokenResult.value) return false;
 
-  const authService = inject(SERVICES)?.authService;
+  const authService = new AuthService();
+
   if (!authService) return false;
 
   return await authService.validateToken(authTokenResult.value);
@@ -48,7 +49,9 @@ const isAuthenticated = async () => {
 
 router.beforeEach(async (to, from, next) => {
   const authService = inject(SERVICES)?.authService;
-  authService?.setToken(authTokenResult.value ?? "");
+  authService?.setToken(
+    (await Preferences.get({ key: "authToken" })).value ?? "",
+  );
 
   if (
     // make sure the user is authenticated
