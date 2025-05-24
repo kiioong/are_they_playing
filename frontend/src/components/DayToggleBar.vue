@@ -25,7 +25,7 @@ import { caretBackOutline, caretForwardOutline } from "ionicons/icons";
 import { format, addDays, isSameDay } from "date-fns";
 import { ModelRef } from "vue";
 
-const pickedDay: ModelRef<Date> = defineModel();
+const pickedDay: ModelRef<Date> = defineModel({ default: new Date() });
 
 const increaseDay = () => {
   pickedDay.value = addDays(pickedDay.value, 1);
