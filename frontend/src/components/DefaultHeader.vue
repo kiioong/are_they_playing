@@ -21,7 +21,6 @@ import {
   IonToolbar,
   IonMenuButton,
 } from "@ionic/vue";
-import { useRouter } from "vue-router";
 import { inject } from "vue";
 import { SERVICES } from "@/keys";
 

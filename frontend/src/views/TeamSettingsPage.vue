@@ -5,7 +5,7 @@
     <ion-content>
       <ion-grid :fixed="true">
         <template v-if="teams.length > 0">
-          <ion-row v-for="team in teams"
+          <ion-row v-for="team in teams" :key="team.id"
             ><ion-col>
               <ion-item>
                 <ion-label>{{ team.name }} </ion-label>
@@ -72,7 +72,7 @@ const removeTeamFromFavourites = async (team: Team) => {
 
   await modal.present();
 
-  const { data, role } = await modal.onWillDismiss();
+  const { role } = await modal.onWillDismiss();
 
   if (role === "confirm") {
     const success =
