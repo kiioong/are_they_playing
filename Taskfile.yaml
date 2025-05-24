@@ -22,6 +22,14 @@ tasks:
       - ionic build
       - ionic cap copy
       - ionic cap sync
-  lint:
+  lint-frontend:
+    cmds:
+      - docker compose exec ionic-gui yarn lint
+  lint-data_grabber:
     cmds:
       - docker compose exec python_service pylint .
+  lint:
+    cmds:
+      - task: lint-frontend
+      - task: lint-data_grabber
+    ignore_error: true
