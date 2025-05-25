@@ -34,8 +34,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY data_grabber/ ./
 
-COPY data_grabber/.docker/python/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
 # Set entrypoint
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["python", "/usr/src/app/orchestrator.py"]

@@ -54,11 +54,38 @@ services:
     environment:
       SCRIPT_NAME:
       INTERNAL_SERVICE_AUTH_KEY:
+      RABBITMQ_DEFAULT_USER:
+      RABBITMQ_DEFAULT_PASS:
     volumes:
       - ./data_grabber:/usr/src/app
     stdin_open: true
     tty: true
     network_mode: host
 
+  message_broker:
+    image: rabbitmq:4.1
+    hostname: rabbit
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "8200:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER:
+      RABBITMQ_DEFAULT_PASS:
+    configs:
+      - source: rabbitmq-plugins
+        target: /etc/rabbitmq/enabled_plugins
+    volumes:
+      - rabbitmq-lib:/var/lib/rabbitmq/
+      - rabbitmq-log:/var/log/rabbitmq
+
+configs:
+  rabbitmq-plugins:
+    content: "[rabbitmq_management]."
+
 volumes:
   database:
+  rabbitmq-lib:
+    driver: local
+  rabbitmq-log:
+    driver: local
